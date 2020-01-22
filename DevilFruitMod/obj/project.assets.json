@@ -1,0 +1,43 @@
+{
+  "version": 3,
+  "targets": {
+    ".NETFramework,Version=v4.5": {}
+  },
+  "libraries": {},
+  "projectFileDependencyGroups": {
+    ".NETFramework,Version=v4.5": []
+  },
+  "packageFolders": {
+    "C:\\Users\\Andy Moffett\\.nuget\\packages\\": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\Users\\Andy Moffett\\Documents\\My Games\\Terraria\\ModLoader\\Mod Sources\\DevilFruitMod\\DevilFruitMod.csproj",
+      "projectName": "DevilFruitMod",
+      "projectPath": "C:\\Users\\Andy Moffett\\Documents\\My Games\\Terraria\\ModLoader\\Mod Sources\\DevilFruitMod\\DevilFruitMod.csproj",
+      "packagesPath": "C:\\Users\\Andy Moffett\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Andy Moffett\\Documents\\My Games\\Terraria\\ModLoader\\Mod Sources\\DevilFruitMod\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\Andy Moffett\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net45"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net45": {
+          "projectReferences": {}
+        }
+      }
+    },
+    "frameworks": {
+      "net45": {}
+    }
+  }
+}

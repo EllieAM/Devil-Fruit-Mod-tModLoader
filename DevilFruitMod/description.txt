@@ -1,0 +1,12 @@
+Devil Fruit Mod is a One Piece centered mod that gives the players the ability to eat a devil fruit and wield its powers.
+
+Current Features:
+ Gum-Gum Fruit (Giving three punch attacks and a grappling hook) - Obtain from the merchant
+
+ Silvers Rayleigh Town NPC to serve as an upgrade system. - moves in when you've eaten a fruit
+
+Future Features:
+ Ace's/Luffy's Hats
+ New Devil Fruits
+
+Any Bugs or feature requests? Contact the developer on Discord at AndyTM6676#4833

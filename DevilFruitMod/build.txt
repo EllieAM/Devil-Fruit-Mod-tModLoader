@@ -1,0 +1,3 @@
+author = AndyTM6676
+version = 0.1
+displayName = Devil Fruit Mod
