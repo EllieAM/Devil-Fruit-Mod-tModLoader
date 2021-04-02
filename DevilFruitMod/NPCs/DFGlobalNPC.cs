@@ -84,6 +84,8 @@ namespace DevilFruitMod.NPCs
 
                 shop.item[nextSlot].SetDefaults(mod.ItemType("GumGumFruit"));
                 nextSlot++;
+                shop.item[nextSlot].SetDefaults(mod.ItemType("LoveLoveFruit"));
+                nextSlot++;
                 shop.item[nextSlot].SetDefaults(mod.ItemType("HitoHitoFruit"));
                 nextSlot++;
                 //if (dayFruit == 2) shop.item[nextSlot].SetDefaults(mod.ItemType("CatCatFruitLeopard"));
