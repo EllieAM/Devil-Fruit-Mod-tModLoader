@@ -11,9 +11,9 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-namespace DevilFruitMod.GumGumFruit
+namespace DevilFruitMod.HitoHitoFruit
 {
-	public class GumGumFruit : ModItem
+	public class HitoHitoFruit : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
@@ -22,7 +22,7 @@ namespace DevilFruitMod.GumGumFruit
 		}
 		public override void SetDefaults()
 		{
-			item.width = 32;
+			item.width = 28;
 			item.height = 44;
 			item.useTime = 20;
 			item.useAnimation = 20;
@@ -48,9 +48,8 @@ namespace DevilFruitMod.GumGumFruit
             }
             else
             {
-                player.GetModPlayer<DevilFruitUser>().eatenDevilFruit = 1;
-                Main.NewText("You've eaten the Gum-Gum fruit, so your body is now made of rubber. Any attack on an empty hotbar slot will allow you to do a ranged punch");
-                Main.NewText("But be careful of water, you can no longer swim");
+                player.GetModPlayer<DevilFruitUser>().eatenDevilFruit = 3;
+                Main.NewText("You've eaten the Human Human Fruit, making you a 'human' human. Beware of water, you can no longer swim.");
             }
             return true;
         }

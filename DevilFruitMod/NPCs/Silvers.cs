@@ -88,21 +88,29 @@ namespace DevilFruitMod.NPCs
 
 		public override string GetChat()
 		{
-            int result = Main.rand.Next(3);
-            string text = "";
-            switch (result)
+            int pirate = NPC.FindFirstNPC(NPCID.Pirate);
+            if (pirate >= 0 && Main.rand.NextBool(5)) return Main.npc[pirate].GivenName + " looks awfully familiar. I wonder what kind of stories he has to tell.";
+            int cyborg = NPC.FindFirstNPC(NPCID.Cyborg);
+            if (cyborg >= 0 && Main.rand.NextBool(5)) return "I gave a cola to " + Main.npc[cyborg].GivenName + " the other day.  He didn't get it...";
+
+            switch (Main.rand.Next(3))
             {
+                case 0:
+                    switch (Main.LocalPlayer.GetModPlayer<DevilFruitUser>().eatenDevilFruit) {
+                        case 1:
+                            return "You must have eaten the Gum-Gum Fruit. In the future, I will be able to teach you new moves to use.";
+                        case 2:
+                            return "You must have eaten the Love-Love Fruit. In the future, I will be able to teach you new moves to use.";
+                        case 3:
+                            return "You must have eaten the Human-Human Fruit. Unlucky.";
+                    }
+                    break;
                 case 1:
-                    text = "You must have eaten the gum-gum fruit. In the future, I will be able to teach you new moves to use.";
-                    break;
+                    return "Maybe nothing in this life happens by accident. As everything happens for a reason, our destiny slowly takes form.";
                 case 2:
-                    text = "Maybe nothing in this life happens by accident. As everything happens for a reason, our destiny slowly takes form.";
-                    break;
-                case 3:
-                    text = "You must have eaten the gum-gum fruit. In the future, I will be able to teach you new moves to use.";
-                    break;
+                    return "If you're having a hard time figuring out how to use your fruit powers, check your hotkeys.";
             }
-            return text;
+            return "";
         }
 
         public override void SetChatButtons(ref string button, ref string button2)
@@ -124,7 +132,18 @@ namespace DevilFruitMod.NPCs
 
                         if ((NPC.downedBoss1 || NPC.downedBoss2 || NPC.downedBoss3 || NPC.downedQueenBee || NPC.downedSlimeKing))
                         {
-                            Main.npcChatText = "Your powers are improved and you have unlocked Gum Gum Rifle!";
+                            switch (Main.LocalPlayer.GetModPlayer<DevilFruitUser>().eatenDevilFruit)
+                            {
+                                case 1:
+                                    Main.npcChatText = "Your powers are improved and you have unlocked Gum Gum Rifle!";
+                                    break;
+                                case 2:
+                                    Main.npcChatText = "Ah, you remind me of a younger Shakky, also you now can use Pistol Kiss.";
+                                    break;
+                                case 3:
+                                    Main.npcChatText = "F in the chat";
+                                    break;
+                            }
                             Main.LocalPlayer.GetModPlayer<DevilFruitUser>().fruitLevel++;
                             Main.NewText("Level Up!");
                         }
@@ -136,7 +155,18 @@ namespace DevilFruitMod.NPCs
                         
                         if (Main.hardMode)
                         {
-                            Main.npcChatText = "Your powers are improved and you have unlocked Gum Gum Gatling!  You have also gained funtionality in a second hand!  Use it wisely.";
+                            switch (Main.LocalPlayer.GetModPlayer<DevilFruitUser>().eatenDevilFruit)
+                            {
+                                case 1:
+                                    Main.npcChatText = "Your powers are improved and you have unlocked Gum Gum Gatling!  You have also gained funtionality in a second hand!  Use it wisely.";
+                                    break;
+                                case 2:
+                                    Main.npcChatText = "Now you're a whole snacc. Enjoy that Slave Arrow, queen.";
+                                    break;
+                                case 3:
+                                    Main.npcChatText = "If only you were a different animal... like a raindeer or something.";
+                                    break;
+                            }
                             Main.LocalPlayer.GetModPlayer<DevilFruitUser>().fruitLevel++;
                             Main.NewText("Level Up!");
                         }
@@ -151,7 +181,9 @@ namespace DevilFruitMod.NPCs
 
                         if (NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3)
                         {
-                            Main.npcChatText = "Your punches will now do devastating damage.  Scavengers beware!";
+                            if (Main.LocalPlayer.GetModPlayer<DevilFruitUser>().eatenDevilFruit == 1) Main.npcChatText = "Your punches will now do devastating damage.  Scavengers beware!";
+                            if (Main.LocalPlayer.GetModPlayer<DevilFruitUser>().eatenDevilFruit == 2) Main.npcChatText = "Dang beech now you got that dumptruck. You could bounce a quarter off them thicc cheeks.";
+                            if (Main.LocalPlayer.GetModPlayer<DevilFruitUser>().eatenDevilFruit == 3) Main.npcChatText = "Wabam, now you're human-i-er or something. Idk man...";
                             Main.LocalPlayer.GetModPlayer<DevilFruitUser>().fruitLevel++;
                             Main.NewText("Level Up!");
                         }
@@ -178,6 +210,9 @@ namespace DevilFruitMod.NPCs
                         else 
                             Main.npcChatText = "There exist three robotic beasts that can be summoned by their respective artifacts. If you destroy all three, another upgrade will come your way.";
                         break;
+                    case 3:
+                        Main.npcChatText = "Welp, that's all the upgrading you can do.  If you feel like your fruit power still sucks feel free to go complain to the developer. She made a discord you know.";
+                        return;
                 }
             }
 		}

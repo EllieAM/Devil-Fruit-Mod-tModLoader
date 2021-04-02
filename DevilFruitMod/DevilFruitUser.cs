@@ -6,6 +6,8 @@ using Terraria.ModLoader.IO;
 using Terraria.GameInput;
 using Terraria.GameContent.Achievements;
 using Microsoft.Xna.Framework;
+using Terraria.ID;
+using Terraria.DataStructures;
 
 namespace DevilFruitMod
 {
@@ -57,12 +59,17 @@ namespace DevilFruitMod
 			int loadVersion = reader.ReadInt32();
 		}
 
+        public override void Kill(double damage, int hitDirection, bool pvp, PlayerDeathReason damageSource)
+        {
+            DevilFruitMod.hands = 0;
+        }
+
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
-            if (DevilFruitMod.MobilityHotkey.JustPressed)
+            if (DevilFruitMod.MiscHotkey.JustPressed)
             {
                 //if: Empty hand, eaten fruit, not in water, and (using mouse -> can use mouse)
-                if (player.HeldItem.type == 0 && (!Equals(DevilFruitMod.MobilityHotkey.GetAssignedKeys(InputMode.Keyboard)[0], "Mouse1") || (Main.hasFocus && !Main.LocalPlayer.mouseInterface && !Main.drawingPlayerChat && !Main.editSign && !Main.editChest && !Main.blockInput && !Main.mapFullscreen && !Main.HoveringOverAnNPC && Main.LocalPlayer.talkNPC == -1)))
+                if (player.HeldItem.type == 0 && (!Equals(DevilFruitMod.MiscHotkey.GetAssignedKeys(InputMode.Keyboard)[0], "Mouse1") || (Main.hasFocus && !Main.LocalPlayer.mouseInterface && !Main.drawingPlayerChat && !Main.editSign && !Main.editChest && !Main.blockInput && !Main.mapFullscreen && !Main.HoveringOverAnNPC && Main.LocalPlayer.talkNPC == -1)))
                 {
 
                     //Getting the shooting trajectory
@@ -75,7 +82,12 @@ namespace DevilFruitMod
                     switch (player.GetModPlayer<DevilFruitUser>().eatenDevilFruit)
                     {
                         case 1:
-                            GumGumMobility(directionX, directionY);
+                            GumGumMisc(directionX, directionY);
+                            break;
+                        case 2:
+                            LoveLoveMisc();
+                            break;
+                        case 3:
                             break;
                     }
                 }
@@ -101,6 +113,11 @@ namespace DevilFruitMod
                         case 1:
                             GumGumPowers(directionX, directionY, 0);
                             break;
+                        case 2:
+                            LoveLovePowers(directionX, directionY, 0);
+                            break;
+                        case 3:
+                            break;
                     }
                 }
             }
@@ -121,27 +138,60 @@ namespace DevilFruitMod
                         case 1:
                             GumGumPowers(directionX, directionY, 1);
                             break;
+                        case 2:
+                            LoveLovePowers(directionX, directionY, 1);
+                            break;
+                        case 3:
+                            break;
                     }
                 }
             }
 
             if (DevilFruitMod.UsePowers3Hotkey.JustPressed)
             {
-                //if: No hands in use, Empty hand, eaten fruit, not in water, and (using mouse -> can use mouse)
-                if (DevilFruitMod.hands == 0 && player.HeldItem.type == 0 && !(player.wet && !(player.honeyWet || player.lavaWet)) && (!Equals(DevilFruitMod.UsePowers1Hotkey.GetAssignedKeys(InputMode.Keyboard)[0], "Mouse1") || (Main.hasFocus && !Main.LocalPlayer.mouseInterface && !Main.drawingPlayerChat && !Main.editSign && !Main.editChest && !Main.blockInput && !Main.mapFullscreen && !Main.HoveringOverAnNPC && Main.LocalPlayer.talkNPC == -1)))
+                if (player.HeldItem.type == 0 && !(player.wet && !(player.honeyWet || player.lavaWet)) && (!Equals(DevilFruitMod.UsePowers1Hotkey.GetAssignedKeys(InputMode.Keyboard)[0], "Mouse1") || (Main.hasFocus && !Main.LocalPlayer.mouseInterface && !Main.drawingPlayerChat && !Main.editSign && !Main.editChest && !Main.blockInput && !Main.mapFullscreen && !Main.HoveringOverAnNPC && Main.LocalPlayer.talkNPC == -1)))
                 {
-                    gatlingPressed = true; //refer to PreUpdate()
-                    timer = 0;
-                    DevilFruitMod.hands += 2;
+                    switch (player.GetModPlayer<DevilFruitUser>().eatenDevilFruit)
+                    {
+                        case 1:
+                            //if: No hands in use, Empty hand, eaten fruit, not in water, and (using mouse -> can use mouse)
+                            if (DevilFruitMod.hands == 0)
+                            {
+                                gatlingPressed = true; //refer to PreUpdate()
+                                timer = 0;
+                                DevilFruitMod.hands += 2;
+                            }
+                            break;
+                        case 2:
+                            float clickX = (int)(Main.mouseX) - Main.screenWidth / 2;
+                            float clickY = (int)(Main.mouseY) - Main.screenHeight / 2;
+                            float magnitude = (float)Math.Sqrt(clickX * clickX + clickY * clickY);
+                            float directionX = 10 * clickX / magnitude;
+                            float directionY = 10 * clickY / magnitude;
+
+                            LoveLovePowers(clickX, clickY, 2);
+                            break;
+                        case 3:
+                            break;
+                    }
                 }
             }
 
             if (DevilFruitMod.UsePowers3Hotkey.JustReleased)
             {
-                if (gatlingPressed == true)
+                switch (player.GetModPlayer<DevilFruitUser>().eatenDevilFruit)
                 {
-                    gatlingPressed = false;
-                    DevilFruitMod.hands -= 2;
+                    case 1:
+                        if (gatlingPressed == true)
+                        {
+                            gatlingPressed = false;
+                            DevilFruitMod.hands -= 2;
+                        }
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        break;
                 }
             }
         }
@@ -172,9 +222,6 @@ namespace DevilFruitMod
                         {
                             case 1:
                                 GumGumPowers(directionX, directionY, 2);
-                                break;
-                            case 2:
-                                //IceIcePowers(directionX, directionY, 2);
                                 break;
                         }
                     }
@@ -259,27 +306,76 @@ namespace DevilFruitMod
                         knockback = 12;
                         break;
                 }
+                if (Main.netMode != NetmodeID.Server && Main.myPlayer == player.whoAmI)
+                {
+                    //still has hands available
+                    if (DevilFruitMod.hands < maxHands && numAbility != 2)
+                    {
+                        if (numAbility == 0)
+                            Projectile.NewProjectile(player.Center.X - 8, player.Center.Y, directionX, directionY, mod.ProjectileType("GumGumPistol"), damage, knockback, Main.myPlayer, 0f, 0f); //Spawning a projectile
+                        if (numAbility == 1)
+                            Projectile.NewProjectile(player.Center.X, player.Center.Y, -directionX / 3, -directionY / 3, mod.ProjectileType("GumGumRifle"), 2 * damage, 2 * knockback, Main.myPlayer, 0f, 0f);
+
+                        DevilFruitMod.hands++;
+                    }
+                    if (numAbility == 2)
+                    {
+                        Projectile.NewProjectile(player.Center.X, player.Center.Y, directionX, directionY, mod.ProjectileType("GumGumGatling"), damage, knockback, Main.myPlayer, 0f, 0f);
+                    }
+                }
+            }
+        }
+
+        public void LoveLovePowers(float directionX, float directionY, int numAbility) //Currently working on
+        {
+            if (numAbility <= player.GetModPlayer<DevilFruitUser>().fruitLevel)
+            {
+                //scaling level to progress
+                switch (player.GetModPlayer<DevilFruitUser>().fruitLevel)
+                {
+                    //start of game
+                    case 0:
+                        break;
+                        //beaten one boss
+                    case 1:
+                        damage = 30;
+                        break;
+                    //Post hardmode
+                    case 2:
+                        damage = 40;
+                        break;
+                    //Post mechanical bosses
+                    case 3:
+                        damage = 76;
+                        break;
+                }
 
                 //still has hands available
-                if (DevilFruitMod.hands < maxHands && numAbility != 2)
+                if (DevilFruitMod.hands < 1 && numAbility == 0)
                 {
-                    if (numAbility == 0)
-                        Projectile.NewProjectile(player.Center.X - 8, player.Center.Y, directionX, directionY, mod.ProjectileType("GumGumPistol"), damage, knockback, Main.myPlayer, 0f, 0f); //Spawning a projectile
-                    if (numAbility == 1)
-                        Projectile.NewProjectile(player.Center.X, player.Center.Y, -directionX / 3, -directionY / 3, mod.ProjectileType("GumGumRifle"), 2 * damage, 2 * knockback, Main.myPlayer, 0f, 0f);
-                    
+                    DevilFruitMod.hands = 2;
+
+                    Projectile.NewProjectile(player.Center.X - 8, player.Center.Y - 10, directionX / 10, directionY / 10, mod.ProjectileType("LoveLoveBeam"), 0, 0, Main.myPlayer, 0f, 3f); //Spawning a projectile
+                    Projectile.NewProjectile(player.Center.X - 8, player.Center.Y - 10, directionX / 10, directionY / 10, mod.ProjectileType("LoveLoveBeam1"), 0, 0, Main.myPlayer, 0f, 0f); //Spawning a projectile
+                }
+                else if (DevilFruitMod.hands < 2 && numAbility == 1)
+                {
                     DevilFruitMod.hands++;
+                    Main.PlaySound(SoundID.Item67, player.position);
+                    Projectile.NewProjectile(player.Center.X - 8, player.Center.Y - 10, directionX, directionY, mod.ProjectileType("PistolKiss"), damage, 0, Main.myPlayer, 0f, 0f); //Spawning a projectile
                 }
-                if (numAbility == 2)
+                else if (DevilFruitMod.hands < 1 && numAbility == 2)
                 {
-                    Projectile.NewProjectile(player.Center.X, player.Center.Y, directionX, directionY, mod.ProjectileType("GumGumGatling"), damage, knockback, Main.myPlayer, 0f, 0f);
-                }
+                    DevilFruitMod.hands = 2;
+
+                    Projectile.NewProjectile(player.Center.X - 8, player.Center.Y - 10, 0, 0, mod.ProjectileType("SlaveArrow"), damage/2, 0, Main.myPlayer, 0f, 0f); //Spawning a projectile
+                }  
             }
         }
 
         //Calls when mobility hotkey pressed
         //Spawns Gum Gum Rocket
-        public void GumGumMobility(float directionX, float directionY)
+        public void GumGumMisc(float directionX, float directionY)
         {
             maxHands = 2;
             if (DevilFruitMod.hands < maxHands)
@@ -287,6 +383,16 @@ namespace DevilFruitMod
                 Projectile.NewProjectile(player.Center.X, player.Center.Y, 1.4f * directionX, 1.4f * directionY, mod.ProjectileType("GumGumHook"), 0, 0, Main.myPlayer, 0f, 0f); //Spawning a projectile
                 Main.PlaySound(SoundLoader.customSoundType, (int)player.position.X, (int)player.position.Y, mod.GetSoundSlot(SoundType.Custom, "Sounds/GumGumShoot"));
                 DevilFruitMod.hands++;
+            }
+        }
+
+        public void LoveLoveMisc()
+        {
+            if (DevilFruitMod.hands <= 0)
+            {
+
+                DevilFruitMod.hands = 3;
+                Projectile.NewProjectile(player.Center.X, player.Center.Y, 0, 0, mod.ProjectileType("LoveBackground"), 0, 0, Main.myPlayer);
             }
         }
     }

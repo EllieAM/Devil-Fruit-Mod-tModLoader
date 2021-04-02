@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
 namespace DevilFruitMod
 {
@@ -24,6 +25,18 @@ namespace DevilFruitMod
                 worldDays++;
                 Main.NewText("Day " + worldDays);
             }
+        }
+
+        public override TagCompound Save()
+        {
+            return new TagCompound {
+                {"worldDays", worldDays}
+            };
+        }
+
+        public override void Load(TagCompound tag)
+        {
+            worldDays = tag.GetInt("worldDays");
         }
     }
 }
