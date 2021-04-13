@@ -22,7 +22,7 @@ namespace DevilFruitMod.HitoHitoFruit
 		}
 		public override void SetDefaults()
 		{
-			item.width = 28;
+			item.width = 29;
 			item.height = 44;
 			item.useTime = 20;
 			item.useAnimation = 20;
