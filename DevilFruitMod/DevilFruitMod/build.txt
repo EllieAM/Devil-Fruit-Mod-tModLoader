@@ -1,0 +1,3 @@
+author = EllieAM2020
+version = 0.2.1
+displayName = Devil Fruit Mod
