@@ -1,115 +1,56 @@
 using System;
-using System.IO;
 using Terraria;
-using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
 using Terraria.GameInput;
-using Terraria.GameContent.Achievements;
-using Microsoft.Xna.Framework;
 using Terraria.ID;
-using Terraria.DataStructures;
 
 namespace DevilFruitMod.BombBombFruit
 {
     public class BombHuman : DevilFruitUser
-	{
+    {
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
-            if (DevilFruitMod.MiscHotkey.JustPressed)
+
+            //if: player has eaten Bomb Bomb Fruit and...
+            //if: Empty hand, eaten fruit, not in water, and (using mouse -> can use mouse)
+            if (player.GetModPlayer<DevilFruitUser>().eatenDevilFruit == 4 && player.HeldItem.type == ItemID.None && !(player.wet && !(player.honeyWet || player.lavaWet)) && (!Equals(DevilFruitMod.UsePowers1Hotkey.GetAssignedKeys(InputMode.Keyboard)[0], "Mouse1") || (Main.hasFocus && !Main.LocalPlayer.mouseInterface && !Main.drawingPlayerChat && !Main.editSign && !Main.editChest && !Main.blockInput && !Main.mapFullscreen && !Main.HoveringOverAnNPC && Main.LocalPlayer.talkNPC == -1)))
             {
-                //if: Empty hand, eaten fruit, not in water, and (using mouse -> can use mouse)
-                if (player.HeldItem.type == 0 && (!Equals(DevilFruitMod.MiscHotkey.GetAssignedKeys(InputMode.Keyboard)[0], "Mouse1") || (Main.hasFocus && !Main.LocalPlayer.mouseInterface && !Main.drawingPlayerChat && !Main.editSign && !Main.editChest && !Main.blockInput && !Main.mapFullscreen && !Main.HoveringOverAnNPC && Main.LocalPlayer.talkNPC == -1)))
+                //Getting the shooting trajectory
+                float clickX = (int)(Main.mouseX) - Main.screenWidth / 2;
+                float clickY = (int)(Main.mouseY) - Main.screenHeight / 2;
+                float magnitude = (float)Math.Sqrt(clickX * clickX + clickY * clickY);
+                float directionX = 10 * clickX / magnitude;
+                float directionY = 10 * clickY / magnitude;
+
+                if (DevilFruitMod.MiscHotkey.JustPressed)
                 {
-
-                    //Getting the shooting trajectory
-                    float clickX = (int)(Main.mouseX) - Main.screenWidth / 2;
-                    float clickY = (int)(Main.mouseY) - Main.screenHeight / 2;
-                    float magnitude = (float)(Math.Sqrt((double)(clickX * clickX + clickY * clickY)));
-                    float directionX = 10 * clickX / magnitude;
-                    float directionY = 10 * clickY / magnitude;
-
-                    if (player.GetModPlayer<DevilFruitUser>().eatenDevilFruit == 4)
-                    {
-                        BombBombMisc();
-                    }
+                    BombBombMisc();
                 }
-            }
 
-            if (DevilFruitMod.UsePowers1Hotkey.JustPressed)
-            {
-                //if: Empty hand, eaten fruit, not in water, and (using mouse -> can use mouse)
-                if (player.HeldItem.type == 0 && !(player.wet && !(player.honeyWet || player.lavaWet)) && (!Equals(DevilFruitMod.UsePowers1Hotkey.GetAssignedKeys(InputMode.Keyboard)[0], "Mouse1") || (Main.hasFocus && !Main.LocalPlayer.mouseInterface && !Main.drawingPlayerChat && !Main.editSign && !Main.editChest && !Main.blockInput && !Main.mapFullscreen && !Main.HoveringOverAnNPC && Main.LocalPlayer.talkNPC == -1)))
+                if (DevilFruitMod.UsePowers1Hotkey.JustPressed)
                 {
-                    //tester space
-
-
-                    //Getting the shooting trajectory
-                    float clickX = (int)(Main.mouseX) - Main.screenWidth / 2;
-                    float clickY = (int)(Main.mouseY) - Main.screenHeight / 2;
-                    float magnitude = (float)Math.Sqrt(clickX * clickX + clickY * clickY);
-                    float directionX = 10 * clickX / magnitude;
-                    float directionY = 10 * clickY / magnitude;
-
-                    if (player.GetModPlayer<DevilFruitUser>().eatenDevilFruit == 4)
-                    {
-                        BombBombPowers(directionX, directionY, 0);
-                    }
+                    BombBombPowers(directionX, directionY, 0);
                 }
-            }
 
-            if (DevilFruitMod.UsePowers2Hotkey.JustPressed)
-            {
-                //if: Empty hand, eaten fruit, not in water, and (using mouse -> can use mouse)
-                if (player.HeldItem.type == 0 && !(player.wet && !(player.honeyWet || player.lavaWet)) && (!Equals(DevilFruitMod.UsePowers1Hotkey.GetAssignedKeys(InputMode.Keyboard)[0], "Mouse2") || (Main.hasFocus && !Main.LocalPlayer.mouseInterface && !Main.drawingPlayerChat && !Main.editSign && !Main.editChest && !Main.blockInput && !Main.mapFullscreen && !Main.HoveringOverAnNPC && Main.LocalPlayer.talkNPC == -1)))
+                if (DevilFruitMod.UsePowers2Hotkey.JustPressed)
                 {
-                    //Getting the shooting trajectory
-                    float clickX = (int)(Main.mouseX) - Main.screenWidth / 2;
-                    float clickY = (int)(Main.mouseY) - Main.screenHeight / 2;
-                    float magnitude = (float)Math.Sqrt(clickX * clickX + clickY * clickY);
-                    float directionX = 10 * clickX / magnitude;
-                    float directionY = 10 * clickY / magnitude;
-
-                    if (player.GetModPlayer<DevilFruitUser>().eatenDevilFruit == 4)
-                    {
-                        BombBombPowers(directionX, directionY, 1);
-                    }
+                    BombBombPowers(directionX, directionY, 1);
                 }
-            }
 
-            if (DevilFruitMod.UsePowers3Hotkey.JustPressed)
-            {
-                if (player.HeldItem.type == 0 && !(player.wet && !(player.honeyWet || player.lavaWet)) && (!Equals(DevilFruitMod.UsePowers1Hotkey.GetAssignedKeys(InputMode.Keyboard)[0], "Mouse3") || (Main.hasFocus && !Main.LocalPlayer.mouseInterface && !Main.drawingPlayerChat && !Main.editSign && !Main.editChest && !Main.blockInput && !Main.mapFullscreen && !Main.HoveringOverAnNPC && Main.LocalPlayer.talkNPC == -1)))
+                if (DevilFruitMod.UsePowers3Hotkey.JustPressed)
                 {
-                    //Getting the shooting trajectory
-                    float clickX = (int)(Main.mouseX) - Main.screenWidth / 2;
-                    float clickY = (int)(Main.mouseY) - Main.screenHeight / 2;
-                    float magnitude = (float)Math.Sqrt(clickX * clickX + clickY * clickY);
-                    float directionX = 10 * clickX / magnitude;
-                    float directionY = 10 * clickY / magnitude;
-
-                    if (player.GetModPlayer<DevilFruitUser>().eatenDevilFruit == 4)
-                    {
-                        BombBombPowers(directionX, directionY, 2);
-                    }
+                    BombBombPowers(directionX, directionY, 2);
                 }
-            }
+
                 /*
                 if (DevilFruitMod.UsePowers3Hotkey.JustReleased)
                 {
-                    if (player.GetModPlayer<DevilFruitUser>().eatenDevilFruit == 4)
-                    {
-                    
-                    }
+
                 }
                 */
+            }
         }
 
-        public override void PreUpdate()
-        {
-            
-        }
-
-        //Calls when hotkeys pressed
+        //Calls when hotkey is pressed
         //Spawns attack projectile depending on numAbility
         public void BombBombPowers(float directionX, float directionY, int numAbility)
         {
@@ -155,12 +96,12 @@ namespace DevilFruitMod.BombBombFruit
                     }
                     else if (DevilFruitMod.hands < 2 && numAbility == 1)
                     {
-                        DevilFruitMod.hands+= 2;
-                        Projectile.NewProjectile(player.Center.X - 8, player.Center.Y - 10, directionX*2, directionY*2, mod.ProjectileType("NoseFancyCannon"), damage, knockback / 2, Main.myPlayer, 0f, 3f); //Spawning a projectile
+                        DevilFruitMod.hands += 2;
+                        Projectile.NewProjectile(player.Center.X - 8, player.Center.Y - 10, directionX * 2, directionY * 2, mod.ProjectileType("NoseFancyCannon"), damage, knockback / 2, Main.myPlayer, 0f, 3f); //Spawning a projectile
                     }
                     else if (DevilFruitMod.hands < 2 && numAbility == 2)
                     {
-                        DevilFruitMod.hands+= 2;
+                        DevilFruitMod.hands += 2;
                         Projectile.NewProjectile(player.Center.X - 8, player.Center.Y - 10, 0, 0, mod.ProjectileType("BeegBomb"), damage * 3, knockback * 2, Main.myPlayer, 0f, 0f); //Spawning a projectile
                     }
                 }
@@ -169,7 +110,7 @@ namespace DevilFruitMod.BombBombFruit
 
         public void BombBombMisc()
         {
-            
+
         }
     }
 }

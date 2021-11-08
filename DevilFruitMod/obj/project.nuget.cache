@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "zp7b+JpE4Di+mPCQpDcLSvrb65OS7UhzG5gM7zAJnrKb8X85Ea8a4Lv8O3CJNC6UdUVHOb99hqrmpnaAqSAGTg==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\BenaM\\Documents\\My Games\\Terraria\\ModLoader\\Mod Sources\\DevilFruitMod\\DevilFruitMod.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\BenaM\\.nuget\\packages\\tmodloader.codeassist\\0.1.3\\tmodloader.codeassist.0.1.3.nupkg.sha512"
+  ],
+  "logs": []
+}
