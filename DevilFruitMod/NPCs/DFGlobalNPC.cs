@@ -27,6 +27,7 @@ namespace DevilFruitMod.NPCs
         private int aiStyleDefault;
         private int alphaDefault;
         private double frameCounterDefault;
+        private bool updateNPC = false;
 
         public override void ResetEffects(NPC npc)
         {
@@ -46,6 +47,7 @@ namespace DevilFruitMod.NPCs
 
         public override bool PreAI(NPC npc)
         {
+
             if (LoveStone)
             {
                 npc.noTileCollide = false;
@@ -55,15 +57,20 @@ namespace DevilFruitMod.NPCs
                 npc.frameCounter = 0;
                 npc.alpha = 0;
                 npc.loveStruck = false;
+                updateNPC = true;
                 return false;
             }
-            else if (hakiStun)
+
+            if (hakiStun)
             {
                 npc.noTileCollide = false;
                 npc.noGravity = false;
                 npc.aiStyle = 0;
+                updateNPC = true;
+                return true;
             }
-            else
+
+            if (updateNPC)
             {
                 npc.noTileCollide = noTileCollideDefault;
                 npc.noGravity = noGravityDefault;
@@ -71,10 +78,13 @@ namespace DevilFruitMod.NPCs
                 npc.damage = damageDefault;
                 //npc.frameCounter = frameCounterDefault;
                 npc.alpha = alphaDefault;
+                updateNPC = false;
             }
 
             return true;
         }
+
+
 
         public override void SetupShop(int type, Chest shop, ref int nextSlot)
         {
