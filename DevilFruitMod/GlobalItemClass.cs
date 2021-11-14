@@ -4,7 +4,7 @@ using Terraria.GameContent.Achievements;
 
 public class GlobalItemClass : GlobalItem
 {
-    //Makes it so that grabbed items will not enter the firat hotbar slot
+    //Makes it so that grabbed items will not enter the first hotbar slot
     //also changes all text to short, and doesn't count fallen star and snowball as ammo (side effects)
     public override bool OnPickup(Item item, Player player)
     {
@@ -13,7 +13,7 @@ public class GlobalItemClass : GlobalItem
         int num2 = 0;
 
         //if ammo then use normal
-        if (((item.ammo > 0 || item.bait > 0) && !item.notAmmo || item.type == 530) && (item.type != 75 && item.type != 949))
+        if (((item.ammo > 0 || item.bait > 0) && !item.notAmmo || item.type == 530) && (item.type != 75 && item.type != 949 && item.type != 169))
         {
             return true;
         }

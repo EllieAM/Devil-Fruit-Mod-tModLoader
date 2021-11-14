@@ -87,7 +87,7 @@ namespace DevilFruitMod.GumGumFruit
                     else
                         Main.player[projectile.owner].ChangeDir(1);
                     initial = false;
-
+                    
                     // Make a 'fwip' above the player
                     Rectangle lowPlayer = new Rectangle(Main.player[projectile.owner].getRect().X, Main.player[projectile.owner].getRect().Y + 40, Main.player[projectile.owner].getRect().Width, Main.player[projectile.owner].getRect().Height);
                     CombatText.NewText(lowPlayer, Color.White, "Fwip");

@@ -3,8 +3,10 @@ Devil Fruit Mod is a One Piece centered mod that gives the players the ability t
 Current Features:
  Gum-Gum Fruit
  Human-Human Fruit 
+ Love-Love Fruit
+ Bomb-Bomb Fruit
 
-Silvers Rayleigh Town NPC to serve as an upgrade system. - moves in when you've eaten a fruit
+Silvers Rayleigh Town NPC to serve as an upgrade system - moves in when you've eaten a fruit
 
 All fruits are currently obtainable from the vanilla merchant for 5g and make sure to configure your hotkeys to use the abilities.
 

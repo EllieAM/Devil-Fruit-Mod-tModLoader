@@ -103,6 +103,8 @@ namespace DevilFruitMod.NPCs
                             return "You must have eaten the Love-Love Fruit. In the future, I will be able to teach you new moves to use.";
                         case 3:
                             return "You must have eaten the Human-Human Fruit. Unlucky.";
+                        case 4:
+                            return "You must have eaten the Bomb-Bomb Fruit. In the future, I will be able to teach you new moves to use.";
                     }
                     break;
                 case 1:
@@ -143,7 +145,10 @@ namespace DevilFruitMod.NPCs
                                 case 3:
                                     Main.npcChatText = "F in the chat";
                                     break;
-                            }
+                                case 4:
+                                    Main.npcChatText = "Watch where you're aiming that thing, you have unlocked Breeze Breath Bomb!";
+                                    break;
+                                }
                             Main.LocalPlayer.GetModPlayer<DevilFruitUser>().fruitLevel++;
                             Main.NewText("Level Up!");
                         }
@@ -166,7 +171,10 @@ namespace DevilFruitMod.NPCs
                                 case 3:
                                     Main.npcChatText = "If only you were a different animal... like a raindeer or something.";
                                     break;
-                            }
+                                case 4:
+                                    Main.npcChatText = "I'm staying away from you, you have unlocked Full Body Explosion.";
+                                    break;
+                                }
                             Main.LocalPlayer.GetModPlayer<DevilFruitUser>().fruitLevel++;
                             Main.NewText("Level Up!");
                         }
@@ -184,6 +192,7 @@ namespace DevilFruitMod.NPCs
                             if (Main.LocalPlayer.GetModPlayer<DevilFruitUser>().eatenDevilFruit == 1) Main.npcChatText = "Your punches will now do devastating damage.  Scavengers beware!";
                             if (Main.LocalPlayer.GetModPlayer<DevilFruitUser>().eatenDevilFruit == 2) Main.npcChatText = "Dang beech now you got that dumptruck. You could bounce a quarter off them thicc cheeks.";
                             if (Main.LocalPlayer.GetModPlayer<DevilFruitUser>().eatenDevilFruit == 3) Main.npcChatText = "Wabam, now you're human-i-er or something. Idk man...";
+                            if (Main.LocalPlayer.GetModPlayer<DevilFruitUser>().eatenDevilFruit == 4) Main.npcChatText = "Your explosions are even more deadly now!";
                             Main.LocalPlayer.GetModPlayer<DevilFruitUser>().fruitLevel++;
                             Main.NewText("Level Up!");
                         }
