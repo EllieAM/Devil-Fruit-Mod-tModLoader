@@ -1,3 +1,4 @@
+using DevilFruitMod.Util;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -17,25 +18,21 @@ namespace DevilFruitMod.GumGumFruit
             if (player.GetModPlayer<DevilFruitUser>().eatenDevilFruit == 1 && player.HeldItem.type == ItemID.None && !(player.wet && !(player.honeyWet || player.lavaWet)) && (!Equals(DevilFruitMod.UsePowers1Hotkey.GetAssignedKeys(InputMode.Keyboard)[0], "Mouse1") || (Main.hasFocus && !Main.LocalPlayer.mouseInterface && !Main.drawingPlayerChat && !Main.editSign && !Main.editChest && !Main.blockInput && !Main.mapFullscreen && !Main.HoveringOverAnNPC && Main.LocalPlayer.talkNPC == -1)))
             {
                 //Getting the shooting trajectory
-                float clickX = (int)(Main.mouseX) - Main.screenWidth / 2;
-                float clickY = (int)(Main.mouseY) - Main.screenHeight / 2;
-                float magnitude = (float)(Math.Sqrt(clickX * clickX + clickY * clickY));
-                float directionX = 10 * clickX / magnitude;
-                float directionY = 10 * clickY / magnitude;
+                Vector2 dir = TMath.CalculateTrajectory();
 
                 if (DevilFruitMod.MiscHotkey.JustPressed)
                 {
-                    GumGumMisc(directionX, directionY);
+                    GumGumMisc(dir.X, dir.Y);
                 }
 
                 if (DevilFruitMod.UsePowers1Hotkey.JustPressed)
                 {
-                    GumGumPowers(directionX, directionY, 0);
+                    GumGumPowers(dir.X, dir.Y, 0);
                 }
 
                 if (DevilFruitMod.UsePowers2Hotkey.JustPressed)
                 {
-                    GumGumPowers(directionX, directionY, 1);       
+                    GumGumPowers(dir.X, dir.Y, 1);       
                 }
 
                 if (DevilFruitMod.UsePowers3Hotkey.JustPressed)
@@ -69,13 +66,9 @@ namespace DevilFruitMod.GumGumFruit
                     if (player.HeldItem.type == 0 && !(player.wet && !(player.honeyWet || player.lavaWet)) && (!Equals(DevilFruitMod.UsePowers1Hotkey.GetAssignedKeys(InputMode.Keyboard)[0], "Mouse1") || (Main.hasFocus && !Main.LocalPlayer.mouseInterface && !Main.drawingPlayerChat && !Main.editSign && !Main.editChest && !Main.blockInput && !Main.mapFullscreen && !Main.HoveringOverAnNPC && Main.LocalPlayer.talkNPC == -1)))
                     {
                         //Getting the shooting trajectory
-                        float clickX = (int)(Main.mouseX) - Main.screenWidth / 2;
-                        float clickY = (int)(Main.mouseY) - Main.screenHeight / 2;
-                        float magnitude = (float)Math.Sqrt(clickX * clickX + clickY * clickY);
-                        float directionX = 10 * clickX / magnitude;
-                        float directionY = 10 * clickY / magnitude;
+                        Vector2 dir = TMath.CalculateTrajectory();
 
-                        GumGumPowers(directionX, directionY, 2);
+                        GumGumPowers(dir.X, dir.Y, 2);
 
                     }
                 }
@@ -86,6 +79,10 @@ namespace DevilFruitMod.GumGumFruit
                 }
             }
 
+            if (player.GetModPlayer<DevilFruitUser>().eatenDevilFruit > 0 && player.wet && !(player.honeyWet || player.lavaWet))
+             {
+                player.AddBuff(ModContent.BuffType<Buffs.waterStun>(), 60, true);
+             }
             //No fall damage if eaten Gum Gum Fruit
             if (player.GetModPlayer<DevilFruitUser>().eatenDevilFruit == 1)
             {

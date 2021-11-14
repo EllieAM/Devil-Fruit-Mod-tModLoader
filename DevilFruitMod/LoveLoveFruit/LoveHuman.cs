@@ -1,3 +1,4 @@
+using DevilFruitMod.Util;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -17,11 +18,7 @@ namespace DevilFruitMod.LoveLoveFruit
             if (player.GetModPlayer<DevilFruitUser>().eatenDevilFruit == 2 && player.HeldItem.type == ItemID.None && !(player.wet && !(player.honeyWet || player.lavaWet)) && (!Equals(DevilFruitMod.UsePowers1Hotkey.GetAssignedKeys(InputMode.Keyboard)[0], "Mouse1") || (Main.hasFocus && !Main.LocalPlayer.mouseInterface && !Main.drawingPlayerChat && !Main.editSign && !Main.editChest && !Main.blockInput && !Main.mapFullscreen && !Main.HoveringOverAnNPC && Main.LocalPlayer.talkNPC == -1)))
             {
                 //Getting the shooting trajectory
-                float clickX = (int)(Main.mouseX) - Main.screenWidth / 2;
-                float clickY = (int)(Main.mouseY) - Main.screenHeight / 2;
-                float magnitude = (float)(Math.Sqrt(clickX * clickX + clickY * clickY));
-                float directionX = 10 * clickX / magnitude;
-                float directionY = 10 * clickY / magnitude;
+                Vector2 dir = TMath.CalculateTrajectory();
 
                 if (DevilFruitMod.MiscHotkey.JustPressed)
                 {
@@ -30,18 +27,26 @@ namespace DevilFruitMod.LoveLoveFruit
 
                 if (DevilFruitMod.UsePowers1Hotkey.JustPressed)
                 {
-                    LoveLovePowers(directionX, directionY, 0);    
+                    LoveLovePowers(dir.X, dir.Y, 0);    
                 }
 
                 if (DevilFruitMod.UsePowers2Hotkey.JustPressed)
                 {
-                    LoveLovePowers(directionX, directionY, 1);
+                    LoveLovePowers(dir.X, dir.Y, 1);
                 }
 
                 if (DevilFruitMod.UsePowers3Hotkey.JustPressed)
                 {
-                    LoveLovePowers(clickX, clickY, 2);
+                    LoveLovePowers(dir.X, dir.Y, 2);
                 }
+            }
+        }
+
+        public override void PreUpdate()
+        {
+            if (player.GetModPlayer<DevilFruitUser>().eatenDevilFruit > 0 && player.wet && !(player.honeyWet || player.lavaWet))
+            {
+                player.AddBuff(ModContent.BuffType<Buffs.waterStun>(), 60, true);
             }
         }
 

@@ -70,16 +70,6 @@ namespace DevilFruitMod
             DevilFruitMod.hooks = 0;
         }
 
-        public override void PreUpdate()
-        {
-            //Applys debuff when touching water
-            if (player.GetModPlayer<DevilFruitUser>().eatenDevilFruit > 0 && player.wet && !(player.honeyWet || player.lavaWet))
-            {
-                player.AddBuff(ModContent.BuffType<Buffs.waterStun>(), 60, true);
-            }
-
-        }
-
         //Debuff effects
         public override void SetControls()
         {
