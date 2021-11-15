@@ -11,9 +11,9 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-namespace DevilFruitMod.DoruDoruFruit
+namespace DevilFruitMod.WaxWaxFruit
 {
-    public class DoruDoruFruit : ModItem
+    public class WaxWaxFruit : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -48,8 +48,8 @@ namespace DevilFruitMod.DoruDoruFruit
             }
             else
             {
-                player.GetModPlayer<DevilFruitUser>().eatenDevilFruit = 3;
-                Main.NewText("You've eaten the Candle Candle Fruit, making you a 'candle' human. Beware of water, you can no longer swim.");
+                player.GetModPlayer<DevilFruitUser>().eatenDevilFruit = 5;
+                Main.NewText("You've eaten the Wax-Wax Fruit, making you a 'candle' human. Beware of water, you can no longer swim.");
             }
             return true;
         }
