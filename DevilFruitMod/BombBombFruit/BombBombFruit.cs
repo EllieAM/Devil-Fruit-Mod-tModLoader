@@ -44,11 +44,13 @@ namespace DevilFruitMod.BombBombFruit
             {
                 player.GetModPlayer<DevilFruitUser>().eatenDevilFruit = 0;
                 player.GetModPlayer<DevilFruitUser>().fruitLevel = 0;
+                player.GetModPlayer<DevilFruitUser>().devilFruitType = 0;
                 player.KillMe(PlayerDeathReason.ByCustomReason(player.name + "'s consumption of a second devil fruit destroyed their body"),1000,0);
             }
             else
             {
                 player.GetModPlayer<DevilFruitUser>().eatenDevilFruit = 4;
+                player.GetModPlayer<DevilFruitUser>().devilFruitType = DevilFruitUser.PARAMECIA;
                 Main.NewText("You've eaten the Bomb-Bomb fruit, making you a bomb human. You can shoot bombs from your body to blow up enemies.");
                 Main.NewText("But be careful of water, you can no longer swim.");
             }

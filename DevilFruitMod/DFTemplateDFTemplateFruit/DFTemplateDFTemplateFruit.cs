@@ -44,12 +44,14 @@ namespace DevilFruitMod.DFTemplateDFTemplateFruit
             {
                 player.GetModPlayer<DevilFruitUser>().eatenDevilFruit = 0;
                 player.GetModPlayer<DevilFruitUser>().fruitLevel = 0;
+                player.GetModPlayer<DevilFruitUser>().devilFruitType = 0;
                 player.KillMe(PlayerDeathReason.ByCustomReason(player.name + "'s consumption of a second devil fruit destroyed their body"),1000,0);
             }
             else
             {
                 //UPDATE VALUE!!
                 player.GetModPlayer<DevilFruitUser>().eatenDevilFruit = 99;
+                player.GetModPlayer<DevilFruitUser>().devilFruitType = 0;
                 Main.NewText("You've eaten the DFTemplate-DFTemplate fruit, making you a DFTemplate human. You can...");
                 Main.NewText("But be careful of water, you can no longer swim.");
             }

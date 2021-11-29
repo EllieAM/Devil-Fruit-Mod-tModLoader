@@ -44,11 +44,13 @@ namespace DevilFruitMod.DoruDoruFruit
             {
                 player.GetModPlayer<DevilFruitUser>().eatenDevilFruit = 0;
                 player.GetModPlayer<DevilFruitUser>().fruitLevel = 0;
+                player.GetModPlayer<DevilFruitUser>().devilFruitType = 0;
                 player.KillMe(PlayerDeathReason.ByCustomReason(player.name + "'s consumption of a second devil fruit destroyed their body"), 1000, 0);
             }
             else
             {
                 player.GetModPlayer<DevilFruitUser>().eatenDevilFruit = 3;
+                player.GetModPlayer<DevilFruitUser>().devilFruitType = DevilFruitUser.LOGIA;
                 Main.NewText("You've eaten the Candle Candle Fruit, making you a 'candle' human. Beware of water, you can no longer swim.");
             }
             return true;

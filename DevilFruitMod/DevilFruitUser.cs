@@ -14,6 +14,7 @@ namespace DevilFruitMod
     public class DevilFruitUser : ModPlayer
 	{
         public int eatenDevilFruit = 0;
+        public int devilFruitType = 0;
         public int fruitLevel = 0;
         public int maxHands;
         public int damage;
@@ -21,6 +22,11 @@ namespace DevilFruitMod
         public bool gatlingPressed;
         public int timer;
         public bool falling = false;
+
+        //variables
+        public const int PARAMECIA = 1;
+        public const int LOGIA = 2;
+        public const int ZOAN = 3;
 
         public override void ResetEffects()
 		{
@@ -45,14 +51,16 @@ namespace DevilFruitMod
 			return new TagCompound {
                 {"eatenDevilFruit", eatenDevilFruit},
                 {"fruitLevel", fruitLevel},
-			};
+                {"devilFruitType", fruitLevel},
+            };
 		}
 
 		public override void Load(TagCompound tag)
 		{
             eatenDevilFruit = tag.GetInt("eatenDevilFruit");
             fruitLevel = tag.GetInt("fruitLevel");
-		}
+            devilFruitType = tag.GetInt("devilFruitType");
+        }
 
 		public override void LoadLegacy(BinaryReader reader)
 		{
@@ -80,6 +88,8 @@ namespace DevilFruitMod
                 player.controlLeft = false;
                 player.controlRight = false;
                 player.controlUp = false;
+                player.controlHook = false;
+                player.controlLeft = false;
             }
         }
     }
