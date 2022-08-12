@@ -15,7 +15,7 @@ namespace DevilFruitMod.BombBombFruit
 
             //if: player has eaten Bomb Bomb Fruit and...
             //if: Empty hand, eaten fruit, not in water, and (using mouse -> can use mouse)
-            if (player.GetModPlayer<DevilFruitUser>().eatenDevilFruit == 4 && player.HeldItem.type == ItemID.None && !(player.wet && !(player.honeyWet || player.lavaWet)) && (!Equals(DevilFruitMod.UsePowers1Hotkey.GetAssignedKeys(InputMode.Keyboard)[0], "Mouse1") || (Main.hasFocus && !Main.LocalPlayer.mouseInterface && !Main.drawingPlayerChat && !Main.editSign && !Main.editChest && !Main.blockInput && !Main.mapFullscreen && !Main.HoveringOverAnNPC && Main.LocalPlayer.talkNPC == -1)))
+            if (Player.GetModPlayer<DevilFruitUser>().eatenDevilFruit == 4 && Player.HeldItem.type == ItemID.None && !(Player.wet && !(Player.honeyWet || Player.lavaWet)) && (!Equals(DevilFruitMod.UsePowers1Hotkey.GetAssignedKeys(InputMode.Keyboard)[0], "Mouse1") || (Main.hasFocus && !Main.LocalPlayer.mouseInterface && !Main.drawingPlayerChat && !Main.editSign && !Main.editChest && !Main.blockInput && !Main.mapFullscreen && !Main.HoveringOverAnNPC && Main.LocalPlayer.talkNPC == -1)))
             {
                 //Getting the shooting trajectory
                 Vector2 dir = TMath.CalculateTrajectory();
@@ -51,9 +51,9 @@ namespace DevilFruitMod.BombBombFruit
 
         public override void PreUpdate()
         {
-            if (player.GetModPlayer<DevilFruitUser>().eatenDevilFruit > 0 && player.wet && !(player.honeyWet || player.lavaWet))
+            if (Player.GetModPlayer<DevilFruitUser>().eatenDevilFruit > 0 && Player.wet && !(Player.honeyWet || Player.lavaWet))
             {
-                player.AddBuff(ModContent.BuffType<Buffs.waterStun>(), 60, true);
+                Player.AddBuff(ModContent.BuffType<Buffs.waterStun>(), 60, true);
             }
         }
 
@@ -61,11 +61,11 @@ namespace DevilFruitMod.BombBombFruit
         //Spawns attack projectile depending on numAbility
         public void BombBombPowers(float directionX, float directionY, int numAbility)
         {
-            if (numAbility <= player.GetModPlayer<DevilFruitUser>().fruitLevel)
+            if (numAbility <= Player.GetModPlayer<DevilFruitUser>().fruitLevel)
             {
                 //scaling damage to progress, change to increase damage,
                 //knockback and number of hands for any given level
-                switch (player.GetModPlayer<DevilFruitUser>().fruitLevel)
+                switch (Player.GetModPlayer<DevilFruitUser>().fruitLevel)
                 {
                     //start of game
                     case 0:
@@ -93,23 +93,23 @@ namespace DevilFruitMod.BombBombFruit
                         break;
                 }
 
-                if (Main.netMode != NetmodeID.Server && Main.myPlayer == player.whoAmI)
+                if (Main.netMode != NetmodeID.Server && Main.myPlayer == Player.whoAmI)
                 {
                     //still has hands available
                     if (DevilFruitMod.hands < 3 && numAbility == 0)
                     {
                         DevilFruitMod.hands++;
-                        Projectile.NewProjectile(player.Center.X - 8, player.Center.Y - 10, directionX, directionY, mod.ProjectileType("BombBombBooger"), damage, knockback, Main.myPlayer, 0f, 3f); //Spawning a projectile
+                        Projectile.NewProjectile(null, Player.Center.X - 8, Player.Center.Y - 10, directionX, directionY, Mod.Find<ModProjectile>("BombBombBooger").Type, damage, knockback, Main.myPlayer, 0f, 3f); //Spawning a projectile
                     }
                     else if (DevilFruitMod.hands < 2 && numAbility == 1)
                     {
                         DevilFruitMod.hands += 2;
-                        Projectile.NewProjectile(player.Center.X - 8, player.Center.Y - 10, directionX * 2, directionY * 2, mod.ProjectileType("NoseFancyCannon"), damage, knockback / 2, Main.myPlayer, 0f, 3f); //Spawning a projectile
+                        Projectile.NewProjectile(null, Player.Center.X - 8, Player.Center.Y - 10, directionX * 2, directionY * 2, Mod.Find<ModProjectile>("NoseFancyCannon").Type, damage, knockback / 2, Main.myPlayer, 0f, 3f); //Spawning a projectile
                     }
                     else if (DevilFruitMod.hands < 2 && numAbility == 2)
                     {
                         DevilFruitMod.hands += 2;
-                        Projectile.NewProjectile(player.Center.X - 8, player.Center.Y - 10, 0, 0, mod.ProjectileType("BeegBomb"), damage * 3, knockback * 2, Main.myPlayer, 0f, 0f); //Spawning a projectile
+                        Projectile.NewProjectile(null, Player.Center.X - 8, Player.Center.Y - 10, 0, 0, Mod.Find<ModProjectile>("BeegBomb").Type, damage * 3, knockback * 2, Main.myPlayer, 0f, 0f); //Spawning a projectile
                     }
                 }
             }

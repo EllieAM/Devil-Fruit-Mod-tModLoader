@@ -9,10 +9,10 @@ namespace DevilFruitMod
 {
     class DevilFruitMod : Mod
     {
-        public static ModHotKey UsePowers1Hotkey;
-        public static ModHotKey UsePowers2Hotkey;
-        public static ModHotKey UsePowers3Hotkey;
-        public static ModHotKey MiscHotkey;
+        public static ModKeybind UsePowers1Hotkey;
+        public static ModKeybind UsePowers2Hotkey;
+        public static ModKeybind UsePowers3Hotkey;
+        public static ModKeybind MiscHotkey;
         public static int hands;
         public static int hooks;
         public static bool npcShockwaveAvailable = true;
@@ -24,18 +24,18 @@ namespace DevilFruitMod
 
         public override void Load()
         {
-            UsePowers1Hotkey = RegisterHotKey("Ability 1", "Mouse1");
-            UsePowers2Hotkey = RegisterHotKey("Ability 2", "Mouse2");
-            UsePowers3Hotkey = RegisterHotKey("Ability 3", "Z");
-            MiscHotkey = RegisterHotKey("Miscellaneous Power", "Q");
+            UsePowers1Hotkey = KeybindLoader.RegisterKeybind(this, "Ability 1", "Mouse1");
+            UsePowers2Hotkey = KeybindLoader.RegisterKeybind(this, "Ability 2", "Mouse2");
+            UsePowers3Hotkey = KeybindLoader.RegisterKeybind(this, "Ability 3", "Z");
+            MiscHotkey = KeybindLoader.RegisterKeybind(this, "Miscellaneous Power", "Q");
 
             //Big ol' thanks to Kazzymodus for helping me figure this shader business out
             //Without em', I wouldn't even have come close to understanding any of this
             if (Main.netMode != NetmodeID.Server)//My shader loading spot
             { 
-                Ref<Effect> screenRef = new Ref<Effect>(GetEffect("Effects/ShockwaveEffect")); // The path to the compiled shader file.
+                Ref<Effect> screenRef = new Ref<Effect>(ModContent.Request<Effect>("Effects/ShockwaveEffect").Value); // The path to the compiled shader file.
 
-                Ref<Effect> stoneRef = new Ref<Effect>(GetEffect("Effects/LoveStone"));
+                Ref<Effect> stoneRef = new Ref<Effect>(ModContent.Request<Effect>("Effects/LoveStone").Value);
                 GameShaders.Misc["LoveStone"] = new MiscShaderData(stoneRef, "StoneEffect");
 
                 Filters.Scene["Shockwave1"] = new Filter(new ScreenShaderData(screenRef, "Shockwave"), EffectPriority.VeryHigh);

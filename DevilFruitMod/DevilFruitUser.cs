@@ -31,7 +31,12 @@ namespace DevilFruitMod
 			DevilFruitUser clone = clientClone as DevilFruitUser;
 		}
 
-		/*public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
+        public override void SendClientChanges(ModPlayer clientPlayer)
+        {
+            base.SendClientChanges(clientPlayer);
+        }
+
+        /*public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
 		{
 			ModPacket packet = mod.GetPacket();
 			packet.Write((byte)ExampleModMessageType.ExampleLifeFruits);
@@ -40,24 +45,24 @@ namespace DevilFruitMod
 			packet.Send(toWho, fromWho);
 		}*/
 
-		public override TagCompound Save()
+        public override void SaveData(TagCompound tag)/* tModPorter Suggestion: Edit tag parameter instead of returning new TagCompound */
 		{
-			return new TagCompound {
-                {"eatenDevilFruit", eatenDevilFruit},
-                {"fruitLevel", fruitLevel},
-			};
+            tag.Add("eatenDevilFruit", eatenDevilFruit);
+            tag.Add("fruitLevel", fruitLevel);
 		}
 
-		public override void Load(TagCompound tag)
+		public override void LoadData(TagCompound tag)
 		{
             eatenDevilFruit = tag.GetInt("eatenDevilFruit");
             fruitLevel = tag.GetInt("fruitLevel");
 		}
 
+        /* OUT OF DATE
 		public override void LoadLegacy(BinaryReader reader)
 		{
 			int loadVersion = reader.ReadInt32();
 		}
+        */
 
         public override void Kill(double damage, int hitDirection, bool pvp, PlayerDeathReason damageSource)
         {
@@ -73,13 +78,13 @@ namespace DevilFruitMod
         //Debuff effects
         public override void SetControls()
         {
-            if (player.GetModPlayer<DevilFruitUser>().eatenDevilFruit > 0 && player.wet && !(player.honeyWet || player.lavaWet))
+            if (Player.GetModPlayer<DevilFruitUser>().eatenDevilFruit > 0 && Player.wet && !(Player.honeyWet || Player.lavaWet))
             {
-                player.controlJump = false;
-                player.controlDown = false;
-                player.controlLeft = false;
-                player.controlRight = false;
-                player.controlUp = false;
+                Player.controlJump = false;
+                Player.controlDown = false;
+                Player.controlLeft = false;
+                Player.controlRight = false;
+                Player.controlUp = false;
             }
         }
     }

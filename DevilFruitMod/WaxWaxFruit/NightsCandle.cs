@@ -11,31 +11,31 @@ namespace DevilFruitMod.WaxWaxFruit
     {
         public override void SetDefaults()
         {
-            projectile.width = 44;
-            projectile.height = 48;
-            projectile.aiStyle = -1;
-            projectile.friendly = true;
-            projectile.melee = true;
-			projectile.timeLeft = 30;
-			projectile.penetrate = -1;
+            Projectile.width = 44;
+            Projectile.height = 48;
+            Projectile.aiStyle = -1;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Melee;
+			Projectile.timeLeft = 30;
+			Projectile.penetrate = -1;
 		}
 
         public override void AI()
 		{
-            if (projectile.velocity.X < 0)
+            if (Projectile.velocity.X < 0)
             {
-                Main.player[projectile.owner].ChangeDir(-1);
-                projectile.spriteDirection = -1;
+                Main.player[Projectile.owner].ChangeDir(-1);
+                Projectile.spriteDirection = -1;
             }
             else
-                Main.player[projectile.owner].ChangeDir(1);
+                Main.player[Projectile.owner].ChangeDir(1);
 
 
             Vector2 offset;
-            offset.X = WaxHuman.gradiantCalc(30, 0, -10, -50, projectile.timeLeft);
-            offset.Y = WaxHuman.gradiantCalc(30, 0, 60, 10, projectile.timeLeft);
-            projectile.rotation = WaxHuman.gradiantCalc(0, 30, projectile.spriteDirection * .785f, projectile.spriteDirection * -.785f, projectile.timeLeft);
-            projectile.Center = Main.player[projectile.owner].MountedCenter - offset;
+            offset.X = WaxHuman.gradiantCalc(30, 0, -10, -50, Projectile.timeLeft);
+            offset.Y = WaxHuman.gradiantCalc(30, 0, 60, 10, Projectile.timeLeft);
+            Projectile.rotation = WaxHuman.gradiantCalc(0, 30, Projectile.spriteDirection * .785f, Projectile.spriteDirection * -.785f, Projectile.timeLeft);
+            Projectile.Center = Main.player[Projectile.owner].MountedCenter - offset;
         }
     }
 }

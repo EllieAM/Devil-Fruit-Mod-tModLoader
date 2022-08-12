@@ -10,14 +10,14 @@ namespace DevilFruitMod.DFTemplateDFTemplateFruit
     {
         public override void SetDefaults()
         {
-            projectile.width = 20;
-            projectile.height = 20;
-            projectile.aiStyle = 0;
-            projectile.friendly = true;
-            projectile.ranged = true;
-            projectile.alpha = 128;
-            projectile.timeLeft = 90;
-			projectile.penetrate = -1;
+            Projectile.width = 20;
+            Projectile.height = 20;
+            Projectile.aiStyle = 0;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.alpha = 128;
+            Projectile.timeLeft = 90;
+			Projectile.penetrate = -1;
 		}
 
 
@@ -28,7 +28,7 @@ namespace DevilFruitMod.DFTemplateDFTemplateFruit
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
-			projectile.timeLeft = 1;
+			Projectile.timeLeft = 1;
 			return false;
 		}
 
@@ -36,7 +36,7 @@ namespace DevilFruitMod.DFTemplateDFTemplateFruit
 		public override void AI()
 		{
 			//Properly orients the projectile for bullet projectiles
-			projectile.rotation = (float)Math.Atan2(projectile.velocity.Y, projectile.velocity.X);
+			Projectile.rotation = (float)Math.Atan2(Projectile.velocity.Y, Projectile.velocity.X);
 		}
 
 

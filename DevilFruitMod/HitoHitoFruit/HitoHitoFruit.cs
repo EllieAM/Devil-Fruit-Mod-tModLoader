@@ -22,15 +22,15 @@ namespace DevilFruitMod.HitoHitoFruit
 		}
 		public override void SetDefaults()
 		{
-			item.width = 29;
-			item.height = 44;
-			item.useTime = 20;
-			item.useAnimation = 20;
-			item.useStyle = 2;
-			item.value = 50000;
-			item.rare = 2;
-			item.UseSound = SoundID.Item2;
-            item.consumable = true;
+			Item.width = 29;
+			Item.height = 44;
+			Item.useTime = 20;
+			Item.useAnimation = 20;
+			Item.useStyle = 2;
+			Item.value = 50000;
+			Item.rare = 2;
+			Item.UseSound = SoundID.Item2;
+            Item.consumable = true;
         }
 
         public override bool CanUseItem(Player player)
@@ -38,7 +38,7 @@ namespace DevilFruitMod.HitoHitoFruit
             return true;
         }
 
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
             if (player.GetModPlayer<DevilFruitUser>().eatenDevilFruit > 0)
             {

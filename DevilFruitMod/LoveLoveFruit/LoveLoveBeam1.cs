@@ -16,16 +16,16 @@ namespace DevilFruitMod.LoveLoveFruit
 
         public override void SetDefaults()
         {
-            projectile.extraUpdates = 0;
-            projectile.width = 21;
-            projectile.height = 32;
-            projectile.aiStyle = -1;
-            projectile.friendly = true;
-            projectile.penetrate = -1;
-            projectile.tileCollide = false;
-            projectile.alpha = 128;
-            projectile.scale = 1f;
-            projectile.timeLeft = 180;
+            Projectile.extraUpdates = 0;
+            Projectile.width = 21;
+            Projectile.height = 32;
+            Projectile.aiStyle = -1;
+            Projectile.friendly = true;
+            Projectile.penetrate = -1;
+            Projectile.tileCollide = false;
+            Projectile.alpha = 128;
+            Projectile.scale = 1f;
+            Projectile.timeLeft = 180;
         }
 
         public override void AI()
@@ -33,27 +33,27 @@ namespace DevilFruitMod.LoveLoveFruit
             if (initial)
             {
                 if (Main.mouseX - Main.screenWidth / 2 < 0)
-                    Main.player[projectile.owner].ChangeDir(-1);
+                    Main.player[Projectile.owner].ChangeDir(-1);
                 else
-                    Main.player[projectile.owner].ChangeDir(1);
+                    Main.player[Projectile.owner].ChangeDir(1);
 
-                projectile.scale = 0;
+                Projectile.scale = 0;
                 initial = false;
             }
 
-            Lighting.AddLight(projectile.Center, 2f, 1.5f, 1.5f);
+            Lighting.AddLight(Projectile.Center, 2f, 1.5f, 1.5f);
 
-            if (projectile.scale < 1)
+            if (Projectile.scale < 1)
             {
-                projectile.scale = (180f - projectile.timeLeft) / 60f;
+                Projectile.scale = (180f - Projectile.timeLeft) / 60f;
 
             }
             //Moves forward
 
-            if (projectile.velocity.X < 0.0)
-                projectile.rotation = (float)Math.Atan2(projectile.velocity.Y, projectile.velocity.X) + 3.14f;
+            if (Projectile.velocity.X < 0.0)
+                Projectile.rotation = (float)Math.Atan2(Projectile.velocity.Y, Projectile.velocity.X) + 3.14f;
             else
-                projectile.rotation = (float)Math.Atan2(projectile.velocity.Y, projectile.velocity.X);
+                Projectile.rotation = (float)Math.Atan2(Projectile.velocity.Y, Projectile.velocity.X);
         }
 
         public override Color? GetAlpha(Color lightColor)

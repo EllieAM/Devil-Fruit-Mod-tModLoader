@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using System.Collections.Generic;
+using Terraria.Audio;
 using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
@@ -14,11 +15,11 @@ namespace DevilFruitMod.LoveLoveFruit
     {
         public override void SetDefaults()
         {
-            projectile.width = 14;
-            projectile.height = 32;
-            projectile.aiStyle = 1;
-            projectile.friendly = true;
-            projectile.ranged = true;
+            Projectile.width = 14;
+            Projectile.height = 32;
+            Projectile.aiStyle = 1;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Ranged;
         }
 
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
@@ -29,10 +30,10 @@ namespace DevilFruitMod.LoveLoveFruit
 
         public override void Kill(int timeLeft)
         {
-            Collision.HitTiles(projectile.position + projectile.velocity, projectile.velocity, projectile.width, projectile.height);
+            Collision.HitTiles(Projectile.position + Projectile.velocity, Projectile.velocity, Projectile.width, Projectile.height);
             for (int i = 0; i <= 10; i++)
             {
-                Dust.NewDust(projectile.position, projectile.width, projectile.height, 21, projectile.velocity.X/2, projectile.velocity.Y/2, 0);
+                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 21, Projectile.velocity.X/2, Projectile.velocity.Y/2, 0);
             }
         }
 
@@ -48,7 +49,7 @@ namespace DevilFruitMod.LoveLoveFruit
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            Main.PlaySound(SoundID.Dig, projectile.position);
+            SoundEngine.PlaySound(SoundID.Dig, Projectile.position);
             return true;
         }
     }

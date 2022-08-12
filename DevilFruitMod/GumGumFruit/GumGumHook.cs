@@ -12,23 +12,23 @@ namespace DevilFruitMod.GumGumFruit
     {
         public override void SetDefaults()
         {
-            projectile.netImportant = true;
-            projectile.width = 18;
-            projectile.height = 18;
-            projectile.aiStyle = 7;
-            projectile.friendly = true;
-            projectile.penetrate = -1;
-            projectile.tileCollide = false;
-            projectile.timeLeft *= 10;
+            Projectile.netImportant = true;
+            Projectile.width = 18;
+            Projectile.height = 18;
+            Projectile.aiStyle = 7;
+            Projectile.friendly = true;
+            Projectile.penetrate = -1;
+            Projectile.tileCollide = false;
+            Projectile.timeLeft *= 10;
         }
 
-        public override bool PreDraw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = mod.GetTexture("GumGumFruit/RubberArm");
+            Texture2D texture = ModContent.Request<Texture2D>("GumGumFruit/RubberArm").Value;
 
-            Vector2 position = projectile.Center;
+            Vector2 position = Projectile.Center;
             Vector2 offset = new Vector2(0, 0);
-            Vector2 mountedCenter = Main.player[projectile.owner].MountedCenter - offset;
+            Vector2 mountedCenter = Main.player[Projectile.owner].MountedCenter - offset;
             Microsoft.Xna.Framework.Rectangle? sourceRectangle = new Microsoft.Xna.Framework.Rectangle?();
             Vector2 origin = new Vector2((float)texture.Width * 0.5f, (float)texture.Height * 0.5f);
             float num1 = (float)texture.Height;
@@ -52,7 +52,7 @@ namespace DevilFruitMod.GumGumFruit
                     position += vector2_1 * num1;
                     vector2_4 = mountedCenter - position;
                     Microsoft.Xna.Framework.Color color2 = Lighting.GetColor((int)position.X / 16, (int)((double)position.Y / 16.0));
-                    color2 = projectile.GetAlpha(color2);
+                    color2 = Projectile.GetAlpha(color2);
                     Main.spriteBatch.Draw(texture, position - Main.screenPosition + offset, sourceRectangle, color2, rotation, origin, 1f, SpriteEffects.None, 0.0f);
                 }
             }
@@ -62,9 +62,9 @@ namespace DevilFruitMod.GumGumFruit
 
         public override Color? GetAlpha(Color lightColor)
         {
-            int armR = Main.player[projectile.owner].skinColor.R * lightColor.R / 255;
-            int armG = Main.player[projectile.owner].skinColor.G * lightColor.G / 255;
-            int armB = Main.player[projectile.owner].skinColor.B * lightColor.B / 255;
+            int armR = Main.player[Projectile.owner].skinColor.R * lightColor.R / 255;
+            int armG = Main.player[Projectile.owner].skinColor.G * lightColor.G / 255;
+            int armB = Main.player[Projectile.owner].skinColor.B * lightColor.B / 255;
             return new Color(armR, armG, armB);
         }
 

@@ -2,7 +2,9 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.Graphics.Shaders;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace DevilFruitMod.GumGumFruit
@@ -18,18 +20,21 @@ namespace DevilFruitMod.GumGumFruit
         public int clickY;
         public bool isTwisted;
         public int damage;
+        SoundStyle GumShootSoundStyle = new SoundStyle("Sounds/GumGumShoot");
+        SoundStyle GumRetractSoundStyle = new SoundStyle("Sounds/GumGumRetract");
+        SoundStyle GumSnapSoundStyle = new SoundStyle("Sounds/GumGumSnap");
 
         public override void SetDefaults()
         {
-            projectile.width = 46;
-            projectile.height = 40;
-            projectile.aiStyle = -1;
-            projectile.friendly = true;
-            projectile.penetrate = -1;
-            projectile.alpha = 0;
-            projectile.melee = true;
-            projectile.extraUpdates = 1;
-            projectile.scale = 2.0f / 3.0f;
+            Projectile.width = 46;
+            Projectile.height = 40;
+            Projectile.aiStyle = -1;
+            Projectile.friendly = true;
+            Projectile.penetrate = -1;
+            Projectile.alpha = 0;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.extraUpdates = 1;
+            Projectile.scale = 2.0f / 3.0f;
             this.initial = true;
             this.initial2 = true;
             this.hit = true;
@@ -38,123 +43,123 @@ namespace DevilFruitMod.GumGumFruit
 
         public override void AI()
         {
-            
-            if (Main.player[projectile.owner].dead)
+            Player player = Main.player[Projectile.owner];
+            if (Main.player[Projectile.owner].dead)
             {
-                projectile.Kill();
+                Projectile.Kill();
                 DevilFruitMod.hands = 0;
             }
             else
             {
-                Main.player[projectile.owner].itemAnimation = 5;
-                Main.player[projectile.owner].itemTime = 5;
+                Main.player[Projectile.owner].itemAnimation = 5;
+                Main.player[Projectile.owner].itemTime = 5;
                 if (this.initial == true)
                 {
                     initial = false;
-                    damage = projectile.damage;
+                    damage = Projectile.damage;
 
-                    playerLoc = new Vector2(Main.player[projectile.owner].position.X, Main.player[projectile.owner].position.Y);
-                    initSpeed = new Vector2(projectile.velocity.X,projectile.velocity.Y);
-                    projectile.velocity.X = 0;
-                    projectile.velocity.Y = 0;
+                    playerLoc = new Vector2(Main.player[Projectile.owner].position.X, Main.player[Projectile.owner].position.Y);
+                    initSpeed = new Vector2(Projectile.velocity.X,Projectile.velocity.Y);
+                    Projectile.velocity.X = 0;
+                    Projectile.velocity.Y = 0;
 
                     clickX = Main.mouseX - Main.screenWidth / 2;
                     clickY = Main.mouseY - Main.screenHeight / 2;
                     
 
                     if (Main.mouseX - Main.screenWidth / 2 < 0)
-                        Main.player[projectile.owner].ChangeDir(-1);
+                        Main.player[Projectile.owner].ChangeDir(-1);
                     else
-                        Main.player[projectile.owner].ChangeDir(1);
+                        Main.player[Projectile.owner].ChangeDir(1);
 
-                    Rectangle lowPlayer = new Rectangle(Main.player[projectile.owner].getRect().X, Main.player[projectile.owner].getRect().Y + 40, Main.player[projectile.owner].getRect().Width, Main.player[projectile.owner].getRect().Height);
+                    Rectangle lowPlayer = new Rectangle(Main.player[Projectile.owner].getRect().X, Main.player[Projectile.owner].getRect().Y + 40, Main.player[Projectile.owner].getRect().Width, Main.player[Projectile.owner].getRect().Height);
                     CombatText.NewText(lowPlayer, Color.White, "Fwip");
 
                     
                 }
-                Vector2 location = new Vector2(projectile.position.X + projectile.width * 0.5f, projectile.position.Y + projectile.height * 0.5f);
-                float distanceX = Main.player[projectile.owner].position.X + Main.player[projectile.owner].width / 2 - location.X - 8;
-                float distanceY = Main.player[projectile.owner].position.Y + Main.player[projectile.owner].height / 2 - location.Y;
+                Vector2 location = new Vector2(Projectile.position.X + Projectile.width * 0.5f, Projectile.position.Y + Projectile.height * 0.5f);
+                float distanceX = Main.player[Projectile.owner].position.X + Main.player[Projectile.owner].width / 2 - location.X - 8;
+                float distanceY = Main.player[Projectile.owner].position.Y + Main.player[Projectile.owner].height / 2 - location.Y;
                 float magnitude = (float)Math.Sqrt(distanceX * (double)distanceX + distanceY * (double)distanceY);
 
                 Vector2 click = new Vector2(clickX, clickY);
-                click -= (Main.player[projectile.owner].position - playerLoc);
+                click -= (Main.player[Projectile.owner].position - playerLoc);
                 click.Normalize();
 
-                if (projectile.ai[0] == 0.0)
+                if (Projectile.ai[0] == 0.0)
                 {
-                    projectile.damage = 0;
-                    projectile.tileCollide = false;
+                    Projectile.damage = 0;
+                    Projectile.tileCollide = false;
                     isTwisted = false;
-                    projectile.rotation = (float)Math.Atan2(distanceY, distanceX) - 1.57f;
+                    Projectile.rotation = (float)Math.Atan2(distanceY, distanceX) - 1.57f;
 
-                    click *= projectile.ai[1] * -3;
+                    click *= Projectile.ai[1] * -3;
 
-                    projectile.position = Main.player[projectile.owner].position + click;
+                    Projectile.position = Main.player[Projectile.owner].position + click;
 
-                    projectile.ai[1]++;
+                    Projectile.ai[1]++;
 
-                    if (projectile.ai[1] >= 60)
+                    if (Projectile.ai[1] >= 60)
                     {
-                        projectile.ai[0] = 1.0f;
+                        Projectile.ai[0] = 1.0f;
                     }
                     return;
                 }
-                else if (projectile.ai[0] == 0.5)
+                else if (Projectile.ai[0] == 0.5)
                 {
-                    projectile.ai[0] = 1.0f;
+                    Projectile.ai[0] = 1.0f;
                 }
-                else if (projectile.ai[0] == 1.0)
+                else if (Projectile.ai[0] == 1.0)
                 {
                     if (isTwisted == false)
                     {
-                        if (projectile.ai[1] >= 70) {
-                            projectile.damage = damage;
-                            projectile.tileCollide = true;
+                        if (Projectile.ai[1] >= 70) {
+                            Projectile.damage = damage;
+                            Projectile.tileCollide = true;
                             isTwisted = true;
-                            Main.PlaySound(SoundLoader.customSoundType, (int)Main.player[projectile.owner].position.X, (int)Main.player[projectile.owner].position.Y, mod.GetSoundSlot(SoundType.Custom, "Sounds/GumGumShoot"));
+                            SoundEngine.PlaySound(GumShootSoundStyle, player.position);
                         }
-                        projectile.ai[1]++;
+                        Projectile.ai[1]++;
                     }
 
                     if (initial2 == true) {
-                        projectile.velocity.X = 20 * click.X;
-                        projectile.velocity.Y = 20 * click.Y;
+                        Projectile.velocity.X = 20 * click.X;
+                        Projectile.velocity.Y = 20 * click.Y;
                         initial2 = false;
                     }
 
-                    projectile.rotation = (float)Math.Atan2(projectile.velocity.Y, projectile.velocity.X) + 1.57f;
+                    Projectile.rotation = (float)Math.Atan2(Projectile.velocity.Y, Projectile.velocity.X) + 1.57f;
 
                     if (magnitude > 500.0)
                     {
-                        projectile.ai[0] = 2f;
-                        Main.PlaySound(SoundLoader.customSoundType, (int)projectile.position.X, (int)projectile.position.Y, mod.GetSoundSlot(SoundType.Custom, "Sounds/GumGumRetract"));
+                        Projectile.ai[0] = 2f;
+                        SoundEngine.PlaySound(GumRetractSoundStyle, Projectile.position);
                         hit = false;
                     }
 
-                    if (projectile.velocity.X < 0.0)
-                        projectile.spriteDirection = -1;
+                    if (Projectile.velocity.X < 0.0)
+                        Projectile.spriteDirection = -1;
                     else
-                        projectile.spriteDirection = 1;
+                        Projectile.spriteDirection = 1;
                     return;
                 }
-                else if (projectile.ai[0] == 2.0)
+                else if (Projectile.ai[0] == 2.0)
                 {
-                    projectile.tileCollide = false;
-                    projectile.rotation = (float)Math.Atan2(distanceY, distanceX) - 1.57f;
+                    Projectile.tileCollide = false;
+                    Projectile.rotation = (float)Math.Atan2(distanceY, distanceX) - 1.57f;
                     float retractSpeed = 20f;
                     if (magnitude < 50.0)
                     {
-                        projectile.Kill();
+                        Projectile.Kill();
                         if (hit)
-                            Main.PlaySound(SoundLoader.customSoundType, (int)projectile.position.X, (int)projectile.position.Y, mod.GetSoundSlot(SoundType.Custom, "Sounds/GumGumSnap"));
+                            SoundEngine.PlaySound(GumSnapSoundStyle, Projectile.position);
                         DevilFruitMod.hands--;
                     }
                     float acceleration = retractSpeed / magnitude;
                     float accelerationX = distanceX * acceleration;
                     float accelerationY = distanceY * acceleration;
-                    projectile.velocity.X = accelerationX;
-                    projectile.velocity.Y = accelerationY;
+                    Projectile.velocity.X = accelerationX;
+                    Projectile.velocity.Y = accelerationY;
                     return;
                 }
             }
@@ -167,12 +172,12 @@ namespace DevilFruitMod.GumGumFruit
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            projectile.ai[0] = 2;
-            Main.PlaySound(0, (int)projectile.position.X, (int)projectile.position.Y);
+            Projectile.ai[0] = 2;
+            SoundEngine.PlaySound(SoundID.Dig, Projectile.position);
             return false;
         }
 
-        public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough)
+        public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
         {
             //Main.NewText(width);
             width = 9;
@@ -181,24 +186,24 @@ namespace DevilFruitMod.GumGumFruit
 
         public override Color? GetAlpha(Color lightColor)
         {
-            int armR = Main.player[projectile.owner].skinColor.R * lightColor.R / 255;
-            int armG = Main.player[projectile.owner].skinColor.G * lightColor.G / 255;
-            int armB = Main.player[projectile.owner].skinColor.B * lightColor.B / 255;
+            int armR = Main.player[Projectile.owner].skinColor.R * lightColor.R / 255;
+            int armG = Main.player[Projectile.owner].skinColor.G * lightColor.G / 255;
+            int armB = Main.player[Projectile.owner].skinColor.B * lightColor.B / 255;
             return new Color(armR, armG, armB);
         }
 
-        public override bool PreDraw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
 
             Texture2D texture;
             if (!isTwisted)
-                texture = mod.GetTexture("GumGumFruit/RifleTwist");
+                texture = ModContent.Request<Texture2D>("GumGumFruit/RifleTwist").Value;
             else
-                texture = mod.GetTexture("GumGumFruit/RubberArm");
+                texture = ModContent.Request<Texture2D>("GumGumFruit/RubberArm").Value;
 
-            Vector2 position = projectile.Center;
+            Vector2 position = Projectile.Center;
             Vector2 offset = new Vector2(8, 0);
-            Vector2 mountedCenter = Main.player[projectile.owner].MountedCenter - offset;
+            Vector2 mountedCenter = Main.player[Projectile.owner].MountedCenter - offset;
             Microsoft.Xna.Framework.Rectangle? sourceRectangle = new Microsoft.Xna.Framework.Rectangle?();
             Vector2 origin = new Vector2((float)texture.Width * 0.5f, (float)texture.Height * 0.5f);
             float num1 = (float)texture.Height;
@@ -222,7 +227,7 @@ namespace DevilFruitMod.GumGumFruit
                     position += vector2_1 * num1;
                     vector2_4 = mountedCenter - position;
                     Microsoft.Xna.Framework.Color color2 = Lighting.GetColor((int)position.X / 16, (int)((double)position.Y / 16.0));
-                    color2 = projectile.GetAlpha(color2);
+                    color2 = Projectile.GetAlpha(color2);
                     Main.spriteBatch.Draw(texture, position - Main.screenPosition + offset, sourceRectangle, color2, rotation, origin, 1f, SpriteEffects.None, 0.0f);
                 }
             }

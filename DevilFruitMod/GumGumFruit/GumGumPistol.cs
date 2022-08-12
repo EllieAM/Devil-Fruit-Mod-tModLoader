@@ -2,7 +2,9 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.Graphics.Shaders;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace DevilFruitMod.GumGumFruit
@@ -11,30 +13,34 @@ namespace DevilFruitMod.GumGumFruit
     {
         public bool initial;
         public bool hit;
+        
+        SoundStyle GumShootSoundStyle = new SoundStyle("Sounds/GumGumShoot");
+        SoundStyle GumRetractSoundStyle = new SoundStyle("Sounds/GumGumRetract");
+        SoundStyle GumSnapSoundStyle = new SoundStyle("Sounds/GumGumSnap");
 
         public override void SetDefaults()
         {
-            projectile.width = 46;
-            projectile.height = 40;
-            projectile.aiStyle = -1;
-            projectile.friendly = true;
-            projectile.penetrate = -1;
-            projectile.alpha = 0;
-            projectile.melee = true;
-            projectile.extraUpdates = 1;
-            projectile.scale = 2.0f / 3.0f;
+            Projectile.width = 46;
+            Projectile.height = 40;
+            Projectile.aiStyle = -1;
+            Projectile.friendly = true;
+            Projectile.penetrate = -1;
+            Projectile.alpha = 0;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.extraUpdates = 1;
+            Projectile.scale = 2.0f / 3.0f;
             initial = true;
             hit = true;
         }
 
         // PreDraw is scawy
-        public override bool PreDraw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = mod.GetTexture("GumGumFruit/RubberArm");
+            Texture2D texture = ModContent.Request<Texture2D>("GumGumFruit/RubberArm").Value;
 
-            Vector2 position = projectile.Center;
+            Vector2 position = Projectile.Center;
             Vector2 offset = new Vector2(8,0);
-            Vector2 mountedCenter = Main.player[projectile.owner].MountedCenter - offset;
+            Vector2 mountedCenter = Main.player[Projectile.owner].MountedCenter - offset;
             Rectangle? sourceRectangle = new Microsoft.Xna.Framework.Rectangle?();
             Vector2 origin = new Vector2(texture.Width * 0.5f, texture.Height * 0.5f);
             float num1 = texture.Height;
@@ -58,7 +64,7 @@ namespace DevilFruitMod.GumGumFruit
                     position += vector2_1 * num1;
                     vector2_4 = mountedCenter - position;
                     Color color2 = Lighting.GetColor((int)position.X / 16, (int)(position.Y / 16.0));
-                    color2 = projectile.GetAlpha(color2);
+                    color2 = Projectile.GetAlpha(color2);
                     Main.spriteBatch.Draw(texture, position - Main.screenPosition + offset, sourceRectangle, color2, rotation, origin, 1f, SpriteEffects.None, 0.0f);
                 }
             }
@@ -68,80 +74,82 @@ namespace DevilFruitMod.GumGumFruit
 
         public override void AI()
         {
+            Player player = Main.player[Projectile.owner];
+
             // Delete the projectile if the player dies, only important because the projectile is tied to player data
-            if (Main.player[projectile.owner].dead)
+            if (Main.player[Projectile.owner].dead)
             {
-                projectile.Kill();
+                Projectile.Kill();
             }
             else
             {
-                Main.player[projectile.owner].itemAnimation = 5;
-                Main.player[projectile.owner].itemTime = 5;
+                Main.player[Projectile.owner].itemAnimation = 5;
+                Main.player[Projectile.owner].itemTime = 5;
                 // Only happens the first time this code executes
                 if (initial == true)
                 {
                     // Look at where the mouse is and change the player's direction to face it
                     // This is unnecisarry for custom weapons because there is already code to do that, but I'm spawning this boi manually
                     if (Main.mouseX - Main.screenWidth / 2 < 0)
-                        Main.player[projectile.owner].ChangeDir(-1);
+                        Main.player[Projectile.owner].ChangeDir(-1);
                     else
-                        Main.player[projectile.owner].ChangeDir(1);
+                        Main.player[Projectile.owner].ChangeDir(1);
                     initial = false;
                     
                     // Make a 'fwip' above the player
-                    Rectangle lowPlayer = new Rectangle(Main.player[projectile.owner].getRect().X, Main.player[projectile.owner].getRect().Y + 40, Main.player[projectile.owner].getRect().Width, Main.player[projectile.owner].getRect().Height);
+                    Rectangle lowPlayer = new Rectangle(Main.player[Projectile.owner].getRect().X, Main.player[Projectile.owner].getRect().Y + 40, Main.player[Projectile.owner].getRect().Width, Main.player[Projectile.owner].getRect().Height);
                     CombatText.NewText(lowPlayer, Color.White, "Fwip");
 
                     // Play the fwip sound
-                    Main.PlaySound(SoundLoader.customSoundType, (int)Main.player[projectile.owner].position.X, (int)Main.player[projectile.owner].position.Y, mod.GetSoundSlot(SoundType.Custom, "Sounds/GumGumShoot"));
+                    SoundEngine.PlaySound(GumShootSoundStyle, player.position);
                 }
 
                 // determines projectile behavior by it's distance from the player, all that data is grabbed here
-                Vector2 location = new Vector2(projectile.position.X + projectile.width * 0.5f, projectile.position.Y + projectile.height * 0.5f);
-                float distanceX = Main.player[projectile.owner].position.X + Main.player[projectile.owner].width / 2 - location.X - 8;
-                float distanceY = Main.player[projectile.owner].position.Y + Main.player[projectile.owner].height / 2 - location.Y;
+                Vector2 location = new Vector2(Projectile.position.X + Projectile.width * 0.5f, Projectile.position.Y + Projectile.height * 0.5f);
+                float distanceX = Main.player[Projectile.owner].position.X + Main.player[Projectile.owner].width / 2 - location.X - 8;
+                float distanceY = Main.player[Projectile.owner].position.Y + Main.player[Projectile.owner].height / 2 - location.Y;
                 float magnitude = (float)Math.Sqrt(distanceX * (double)distanceX + distanceY * (double)distanceY);
 
                 // ai[0] == 0 is the first mode, fist extends until it either hits something or gets too far from player, then changes mode
-                if (projectile.ai[0] == 0.0)
+                if (Projectile.ai[0] == 0.0)
                 {
                     // fist gets too far, so it changes mode, saves the flag that it didn't hit anything, and plays the retract sound
                     if (magnitude > 500.0)
                     {
-                        projectile.ai[0] = 1f;
-                        Main.PlaySound(SoundLoader.customSoundType, (int)projectile.position.X, (int)projectile.position.Y, mod.GetSoundSlot(SoundType.Custom, "Sounds/GumGumRetract"));
+                        Projectile.ai[0] = 1f;
+                        SoundEngine.PlaySound(GumRetractSoundStyle, Projectile.position);
                         hit = false;
                     }
 
                     // Uses fist's velocity to determine how it's rotated, calculated in radians
-                    projectile.rotation = (float)Math.Atan2(projectile.velocity.Y, projectile.velocity.X) + 1.57f;
-                    if (projectile.velocity.X < 0.0)
-                        projectile.spriteDirection = -1;
+                    Projectile.rotation = (float)Math.Atan2(Projectile.velocity.Y, Projectile.velocity.X) + 1.57f;
+                    if (Projectile.velocity.X < 0.0)
+                        Projectile.spriteDirection = -1;
                     else
-                        projectile.spriteDirection = 1;
+                        Projectile.spriteDirection = 1;
                      return;
                 }
                 else // ai[0] == 1 is the second mode, where it comes back to the player and despawns
                 {
                     // goes through all the walls
-                    projectile.tileCollide = false;
+                    Projectile.tileCollide = false;
                     // Make knuckles face away from player
-                    projectile.rotation = (float)Math.Atan2(distanceY, distanceX) - 1.57f;
+                    Projectile.rotation = (float)Math.Atan2(distanceY, distanceX) - 1.57f;
                     // get closer to player by ~20px per frame
                     float retractSpeed = 20f;
                     if (magnitude < 50.0) // Kill the projectile if it's too close
                     {
-                        projectile.Kill();
+                        Projectile.Kill();
                         // Play the snap sound if the retract sound was played. (Only when it doesn't hit anything do these sound fx sound good)
                         if (hit)
-                            Main.PlaySound(SoundLoader.customSoundType, (int)projectile.position.X, (int)projectile.position.Y, mod.GetSoundSlot(SoundType.Custom, "Sounds/GumGumSnap"));
+                            SoundEngine.PlaySound(GumSnapSoundStyle, Projectile.position);
                         DevilFruitMod.hands--;
                     }
                     float num5 = retractSpeed / magnitude;
                     float num6 = distanceX * num5;
                     float num7 = distanceY * num5;
-                    projectile.velocity.X = num6;
-                    projectile.velocity.Y = num7;
+                    Projectile.velocity.X = num6;
+                    Projectile.velocity.Y = num7;
                     return;
                 }
             }
@@ -150,20 +158,20 @@ namespace DevilFruitMod.GumGumFruit
         // This one's pretty self explanatory, it's where the mode actually gets changed
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            projectile.ai[0] = 1;
+            Projectile.ai[0] = 1;
         }
 
         // Same as the last one, except I also play the vanilla thunky sound when projectiles hit walls
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            projectile.ai[0] = 1;
-            Main.PlaySound(0, (int)projectile.position.X, (int)projectile.position.Y);
+            Projectile.ai[0] = 1;
+            SoundEngine.PlaySound(SoundID.Dig, Projectile.position);
             return false;
         }
 
         // This was so I can tweak the hitbox so the fist interacted with walls more cleanly
         // No one has complained about the hitbox of the fist yet so I think this is probably good.
-        public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough)
+        public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
         {
             width = 9;
             return true;
@@ -173,9 +181,9 @@ namespace DevilFruitMod.GumGumFruit
         // I wanted to use the same method for making enemies 'stone colored' when they get hit by Mero Mero but uhh... it didn't work.
         public override Color? GetAlpha(Color lightColor)
         {
-            int armR = Main.player[projectile.owner].skinColor.R * lightColor.R / 255;
-            int armG = Main.player[projectile.owner].skinColor.G * lightColor.G / 255;
-            int armB = Main.player[projectile.owner].skinColor.B * lightColor.B / 255;
+            int armR = Main.player[Projectile.owner].skinColor.R * lightColor.R / 255;
+            int armG = Main.player[Projectile.owner].skinColor.G * lightColor.G / 255;
+            int armB = Main.player[Projectile.owner].skinColor.B * lightColor.B / 255;
             return new Color(armR, armG, armB);
         }
     }

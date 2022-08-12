@@ -1,18 +1,20 @@
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ID;
 
 namespace DevilFruitMod.Buffs
 {
     public class waterStun : ModBuff
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Can't Swim");
             Description.SetDefault("Your devil fruit is preventing you from swimming!");
             Main.debuff[Type] = true;
             Main.buffNoSave[Type] = true;
             Main.buffNoTimeDisplay[Type] = true;
-            canBeCleared = false;
+            BuffID.Sets.NurseCannotRemoveDebuff[Type] = true;
+            /* tModPorter Note: Removed. Use BuffID.Sets.NurseCannotRemoveDebuff instead, and invert the logic */
         }
 
         public override void Update(Player player, ref int buffIndex)

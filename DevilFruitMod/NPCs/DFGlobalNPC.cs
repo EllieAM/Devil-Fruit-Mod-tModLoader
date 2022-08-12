@@ -92,20 +92,20 @@ namespace DevilFruitMod.NPCs
             {
                 //int dayFruit = DFWorldClass.worldDays % 2; //New Fruit Every Day
 
-                shop.item[nextSlot].SetDefaults(mod.ItemType("GumGumFruit"));
+                shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("GumGumFruit").Type);
                 nextSlot++;
-                shop.item[nextSlot].SetDefaults(mod.ItemType("LoveLoveFruit"));
+                shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("LoveLoveFruit").Type);
                 nextSlot++;
-                shop.item[nextSlot].SetDefaults(mod.ItemType("HitoHitoFruit"));
+                shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("HitoHitoFruit").Type);
                 nextSlot++;
-                shop.item[nextSlot].SetDefaults(mod.ItemType("BombBombFruit"));
+                shop.item[nextSlot].SetDefaults(Mod.Find<ModItem>("BombBombFruit").Type);
                 nextSlot++;
                 //if (dayFruit == 2) shop.item[nextSlot].SetDefaults(mod.ItemType("CatCatFruitLeopard"));
                 //if (dayFruit == 3) shop.item[nextSlot].SetDefaults(mod.ItemType("HollowHollowFruit"));
             }
         }
 
-        public override bool PreDraw(NPC npc, SpriteBatch spriteBatch, Color drawColor)
+        public override bool PreDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             if (LoveStone && Main.netMode != NetmodeID.Server)
             {
@@ -121,7 +121,7 @@ namespace DevilFruitMod.NPCs
             return true;
         }
 
-        public override void PostDraw(NPC npc, SpriteBatch spriteBatch, Color drawColor)
+        public override void PostDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             if (resetBatchInPost)
             {

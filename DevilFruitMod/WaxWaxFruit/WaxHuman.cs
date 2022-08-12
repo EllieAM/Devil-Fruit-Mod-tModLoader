@@ -2,6 +2,7 @@ using System;
 using Terraria;
 using Terraria.GameInput;
 using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace DevilFruitMod.WaxWaxFruit
 {
@@ -15,7 +16,7 @@ namespace DevilFruitMod.WaxWaxFruit
 
             //if: player has eaten Wax-Wax Fruit and...
             //if: Empty hand, eaten fruit, not in water, and (using mouse -> can use mouse)
-            if (player.GetModPlayer<DevilFruitUser>().eatenDevilFruit == 5 && player.HeldItem.type == ItemID.None && !(player.wet && !(player.honeyWet || player.lavaWet)) && (!Equals(DevilFruitMod.UsePowers1Hotkey.GetAssignedKeys(InputMode.Keyboard)[0], "Mouse1") || (Main.hasFocus && !Main.LocalPlayer.mouseInterface && !Main.drawingPlayerChat && !Main.editSign && !Main.editChest && !Main.blockInput && !Main.mapFullscreen && !Main.HoveringOverAnNPC && Main.LocalPlayer.talkNPC == -1)))
+            if (Player.GetModPlayer<DevilFruitUser>().eatenDevilFruit == 5 && Player.HeldItem.type == ItemID.None && !(Player.wet && !(Player.honeyWet || Player.lavaWet)) && (!Equals(DevilFruitMod.UsePowers1Hotkey.GetAssignedKeys(InputMode.Keyboard)[0], "Mouse1") || (Main.hasFocus && !Main.LocalPlayer.mouseInterface && !Main.drawingPlayerChat && !Main.editSign && !Main.editChest && !Main.blockInput && !Main.mapFullscreen && !Main.HoveringOverAnNPC && Main.LocalPlayer.talkNPC == -1)))
             {
                 //Getting the shooting trajectory
                 float clickX = (int)(Main.mouseX) - Main.screenWidth / 2;
@@ -75,11 +76,11 @@ namespace DevilFruitMod.WaxWaxFruit
         //Spawns attack projectile depending on numAbility
         public void WaxWaxPowers(float directionX, float directionY, int numAbility)
         {
-            if (numAbility <= player.GetModPlayer<DevilFruitUser>().fruitLevel)
+            if (numAbility <= Player.GetModPlayer<DevilFruitUser>().fruitLevel)
             {
                 //scaling damage to progress, change to increase damage,
                 //knockback and number of hands for any given level
-                switch (player.GetModPlayer<DevilFruitUser>().fruitLevel)
+                switch (Player.GetModPlayer<DevilFruitUser>().fruitLevel)
                 {
                     //start of game
                     case 0:
@@ -107,7 +108,7 @@ namespace DevilFruitMod.WaxWaxFruit
                         break;
                 }
 
-                if (Main.netMode != NetmodeID.Server && Main.myPlayer == player.whoAmI)
+                if (Main.netMode != NetmodeID.Server && Main.myPlayer == Player.whoAmI)
                 {
                     //still has hands available
                     if (numAbility == 0)
@@ -115,28 +116,28 @@ namespace DevilFruitMod.WaxWaxFruit
                         switch (roulette)
                         {
                             case 0:
-                                Projectile.NewProjectile(player.Center.X - 8, player.Center.Y - 10, directionX, directionY, mod.ProjectileType("NightsCandle"), damage, knockback, Main.myPlayer, 0f, 0f);
+                                Projectile.NewProjectile(null, Player.Center.X - 8, Player.Center.Y - 10, directionX, directionY, Mod.Find<ModProjectile>("NightsCandle").Type, damage, knockback, Main.myPlayer, 0f, 0f);
                                 break;
                             case 1:
-                                Projectile.NewProjectile(player.Center.X - 8, player.Center.Y - 10, directionX, directionY, mod.ProjectileType("CandleNaginata"), damage, knockback, Main.myPlayer, 0f, 3f);
+                                Projectile.NewProjectile(null, Player.Center.X - 8, Player.Center.Y - 10, directionX, directionY, Mod.Find<ModProjectile>("CandleNaginata").Type, damage, knockback, Main.myPlayer, 0f, 3f);
                                 break;
                             case 3:
-                                Projectile.NewProjectile(player.Center.X - 8, player.Center.Y - 10, directionX, directionY, mod.ProjectileType("WaxAxe"), damage, knockback, Main.myPlayer, 0f, 3f);
+                                Projectile.NewProjectile(null, Player.Center.X - 8, Player.Center.Y - 10, directionX, directionY, Mod.Find<ModProjectile>("WaxAxe").Type, damage, knockback, Main.myPlayer, 0f, 3f);
                                 break;
                             case 4:
-                                Projectile.NewProjectile(player.Center.X - 8, player.Center.Y - 10, directionX, directionY, mod.ProjectileType("CandleTsunami"), damage, knockback, Main.myPlayer, 0f, 3f);
+                                Projectile.NewProjectile(null, Player.Center.X - 8, Player.Center.Y - 10, directionX, directionY, Mod.Find<ModProjectile>("CandleTsunami").Type, damage, knockback, Main.myPlayer, 0f, 3f);
                                 break;
                         }
                     }
                     else if (DevilFruitMod.hands < 2 && numAbility == 1)
                     {
                         DevilFruitMod.hands ++;
-                        //Projectile.NewProjectile(player.Center.X - 8, player.Center.Y - 10, directionX, directionY, mod.ProjectileType("WaxWaxAttack2"), damage, knockback, Main.myPlayer, 0f, 3f); //Spawning a projectile
+                        //Projectile.NewProjectile(null, player.Center.X - 8, player.Center.Y - 10, directionX, directionY, mod.ProjectileType("WaxWaxAttack2"), damage, knockback, Main.myPlayer, 0f, 3f); //Spawning a projectile
                     }
                     else if (DevilFruitMod.hands < 1 && numAbility == 2)
                     {
                         DevilFruitMod.hands += 2;
-                        //Projectile.NewProjectile(player.Center.X - 8, player.Center.Y - 10, directionX, directionY, mod.ProjectileType("WaxWaxAttack3"), damage, knockback, Main.myPlayer, 0f, 3f); //Spawning a projectile
+                        //Projectile.NewProjectile(null, player.Center.X - 8, player.Center.Y - 10, directionX, directionY, mod.ProjectileType("WaxWaxAttack3"), damage, knockback, Main.myPlayer, 0f, 3f); //Spawning a projectile
                     }
                 }
             }

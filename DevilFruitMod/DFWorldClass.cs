@@ -9,7 +9,7 @@ using Terraria.ModLoader.IO;
 
 namespace DevilFruitMod
 {
-    class DFWorldClass : ModWorld
+    class DFWorldClass : ModSystem
     {
         public static int worldDays;
 
@@ -18,7 +18,7 @@ namespace DevilFruitMod
             worldDays = 0;
         }
 
-        public override void PreUpdate ()
+        public override void PreUpdateWorld ()
         {
             if (Main.time == 0 && Main.dayTime == true)
             {
@@ -27,14 +27,12 @@ namespace DevilFruitMod
             }
         }
 
-        public override TagCompound Save()
+        public override void SaveWorldData(TagCompound tag)/* tModPorter Suggestion: Edit tag parameter instead of returning new TagCompound */
         {
-            return new TagCompound {
-                {"worldDays", worldDays}
-            };
+            tag.Add("worldDays", worldDays);
         }
 
-        public override void Load(TagCompound tag)
+        public override void LoadWorldData(TagCompound tag)
         {
             worldDays = tag.GetInt("worldDays");
         }

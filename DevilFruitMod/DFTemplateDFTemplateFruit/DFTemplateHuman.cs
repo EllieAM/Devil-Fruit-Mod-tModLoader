@@ -1,8 +1,10 @@
 using DevilFruitMod.Util;
+using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.GameInput;
 using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace DevilFruitMod.DFTemplateDFTemplateFruit
 {
@@ -27,7 +29,7 @@ namespace DevilFruitMod.DFTemplateDFTemplateFruit
             //if: player has eaten DFTemplate-DFTemplate Fruit and...
             //if: Empty hand, eaten fruit, not in water, and (using mouse -> can use mouse)
             //UPDATE eatenDevilFruit VALUE!!
-            if (player.GetModPlayer<DevilFruitUser>().eatenDevilFruit == 99 && player.HeldItem.type == ItemID.None && !(player.wet && !(player.honeyWet || player.lavaWet)) && (!Equals(DevilFruitMod.UsePowers1Hotkey.GetAssignedKeys(InputMode.Keyboard)[0], "Mouse1") || (Main.hasFocus && !Main.LocalPlayer.mouseInterface && !Main.drawingPlayerChat && !Main.editSign && !Main.editChest && !Main.blockInput && !Main.mapFullscreen && !Main.HoveringOverAnNPC && Main.LocalPlayer.talkNPC == -1)))
+            if (Player.GetModPlayer<DevilFruitUser>().eatenDevilFruit == 99 && Player.HeldItem.type == ItemID.None && !(Player.wet && !(Player.honeyWet || Player.lavaWet)) && (!Equals(DevilFruitMod.UsePowers1Hotkey.GetAssignedKeys(InputMode.Keyboard)[0], "Mouse1") || (Main.hasFocus && !Main.LocalPlayer.mouseInterface && !Main.drawingPlayerChat && !Main.editSign && !Main.editChest && !Main.blockInput && !Main.mapFullscreen && !Main.HoveringOverAnNPC && Main.LocalPlayer.talkNPC == -1)))
             {
                 //Getting the shooting trajectory
                 Vector2 dir = TMath.CalculateTrajectory();
@@ -63,9 +65,9 @@ namespace DevilFruitMod.DFTemplateDFTemplateFruit
 
         public override void PreUpdate()
         {
-            if (player.GetModPlayer<DevilFruitUser>().eatenDevilFruit > 0 && player.wet && !(player.honeyWet || player.lavaWet))
+            if (Player.GetModPlayer<DevilFruitUser>().eatenDevilFruit > 0 && Player.wet && !(Player.honeyWet || Player.lavaWet))
             {
-                player.AddBuff(ModContent.BuffType<Buffs.waterStun>(), 60, true);
+                Player.AddBuff(ModContent.BuffType<Buffs.waterStun>(), 60, true);
             }
         }
 
@@ -73,11 +75,11 @@ namespace DevilFruitMod.DFTemplateDFTemplateFruit
         //Spawns attack projectile depending on numAbility
         public void DFTemplateDFTemplatePowers(float directionX, float directionY, int numAbility)
         {
-            if (numAbility <= player.GetModPlayer<DevilFruitUser>().fruitLevel)
+            if (numAbility <= Player.GetModPlayer<DevilFruitUser>().fruitLevel)
             {
                 //scaling damage to progress, change to increase damage,
                 //knockback and number of hands for any given level
-                switch (player.GetModPlayer<DevilFruitUser>().fruitLevel)
+                switch (Player.GetModPlayer<DevilFruitUser>().fruitLevel)
                 {
                     //start of game
                     case 0:
@@ -105,23 +107,23 @@ namespace DevilFruitMod.DFTemplateDFTemplateFruit
                         break;
                 }
 
-                if (Main.netMode != NetmodeID.Server && Main.myPlayer == player.whoAmI)
+                if (Main.netMode != NetmodeID.Server && Main.myPlayer == Player.whoAmI)
                 {
                     //still has hands available
                     if (DevilFruitMod.hands < 2 && numAbility == 0)
                     {
                         DevilFruitMod.hands++;
-                        Projectile.NewProjectile(player.Center.X - 8, player.Center.Y - 10, directionX, directionY, mod.ProjectileType("DFTemplateDFTemplateAttack1"), damage, knockback, Main.myPlayer, 0f, 3f); //Spawning a projectile
+                        Projectile.NewProjectile(null, Player.Center.X - 8, Player.Center.Y - 10, directionX, directionY, Mod.Find<ModProjectile>("DFTemplateDFTemplateAttack1").Type, damage, knockback, Main.myPlayer, 0f, 3f); //Spawning a projectile
                     }
                     else if (DevilFruitMod.hands < 2 && numAbility == 1)
                     {
                         DevilFruitMod.hands ++;
-                        Projectile.NewProjectile(player.Center.X - 8, player.Center.Y - 10, directionX, directionY, mod.ProjectileType("DFTemplateDFTemplateAttack2"), damage, knockback, Main.myPlayer, 0f, 3f); //Spawning a projectile
+                        Projectile.NewProjectile(null, Player.Center.X - 8, Player.Center.Y - 10, directionX, directionY, Mod.Find<ModProjectile>("DFTemplateDFTemplateAttack2").Type, damage, knockback, Main.myPlayer, 0f, 3f); //Spawning a projectile
                     }
                     else if (DevilFruitMod.hands < 1 && numAbility == 2)
                     {
                         DevilFruitMod.hands += 2;
-                        Projectile.NewProjectile(player.Center.X - 8, player.Center.Y - 10, directionX, directionY, mod.ProjectileType("DFTemplateDFTemplateAttack3"), damage, knockback, Main.myPlayer, 0f, 3f); //Spawning a projectile
+                        Projectile.NewProjectile(null, Player.Center.X - 8, Player.Center.Y - 10, directionX, directionY, Mod.Find<ModProjectile>("DFTemplateDFTemplateAttack3").Type, damage, knockback, Main.myPlayer, 0f, 3f); //Spawning a projectile
                     }
                 }
             }

@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ModLoader;
 using Terraria.GameContent.Achievements;
 using Terraria.ID;
@@ -9,16 +10,17 @@ namespace DevilFruitMod.DFTemplateDFTemplateFruit
 {
     public class DFTemplateDFTemplateAttack1 : ModProjectile
     {
+        SoundStyle DFTemplateSoundStyle = new SoundStyle("Sounds/DFTemplateDFTemplateSound");
         public override void SetDefaults()
         {
-            projectile.width = 0;
-            projectile.height = 0;
-            projectile.aiStyle = 1;
-            projectile.friendly = true;
-            projectile.ranged = true;
-            projectile.alpha = 128;
-			projectile.timeLeft = 50;
-			projectile.penetrate = -1;
+            Projectile.width = 0;
+            Projectile.height = 0;
+            Projectile.aiStyle = 1;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.alpha = 128;
+			Projectile.timeLeft = 50;
+			Projectile.penetrate = -1;
 		}
 
 
@@ -29,15 +31,15 @@ namespace DevilFruitMod.DFTemplateDFTemplateFruit
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            projectile.timeLeft = 1;
+            Projectile.timeLeft = 1;
             return false;
         }
 
         public override void AI()
 		{
-            if (projectile.timeLeft == 50)
+            if (Projectile.timeLeft == 50)
             {
-                Main.PlaySound(SoundLoader.customSoundType, (int)Main.player[projectile.owner].position.X, (int)Main.player[projectile.owner].position.Y, mod.GetSoundSlot(SoundType.Custom, "Sounds/DFTemplateDFTemplateSound"));
+                SoundEngine.PlaySound(DFTemplateSoundStyle, Projectile.position);
             }
 		}
 

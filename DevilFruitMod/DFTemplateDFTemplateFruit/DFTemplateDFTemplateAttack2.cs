@@ -11,14 +11,14 @@ namespace DevilFruitMod.DFTemplateDFTemplateFruit
     {
         public override void SetDefaults()
         {
-            projectile.width = 12;
-            projectile.height = 12;
-            projectile.aiStyle = 1;
-            projectile.friendly = true;
-            projectile.ranged = true;
-            projectile.alpha = 128;
-            projectile.timeLeft = 50;
-			projectile.penetrate = -1;
+            Projectile.width = 12;
+            Projectile.height = 12;
+            Projectile.aiStyle = 1;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.alpha = 128;
+            Projectile.timeLeft = 50;
+			Projectile.penetrate = -1;
 		}
 
 
@@ -29,7 +29,7 @@ namespace DevilFruitMod.DFTemplateDFTemplateFruit
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
-			projectile.timeLeft = 1;
+			Projectile.timeLeft = 1;
 			return false;
 		}
 

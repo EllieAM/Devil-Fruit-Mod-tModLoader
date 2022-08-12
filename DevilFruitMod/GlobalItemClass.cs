@@ -1,6 +1,8 @@
 ﻿using Terraria;
+using Terraria.Audio;
 using Terraria.ModLoader;
 using Terraria.GameContent.Achievements;
+using Terraria.ID;
 
 public class GlobalItemClass : GlobalItem
 {
@@ -8,12 +10,12 @@ public class GlobalItemClass : GlobalItem
     //also changes all text to short, and doesn't count fallen star and snowball as ammo (side effects)
     public override bool OnPickup(Item item, Player player)
     {
-        bool flag = item.type >= 71 && item.type <= 74;
+        bool flag = item.type >= ItemID.CopperCoin && item.type <= ItemID.PlatinumCoin;
         int num1 = 50;
         int num2 = 0;
 
-        //if ammo then use normal
-        if (((item.ammo > 0 || item.bait > 0) && !item.notAmmo || item.type == 530) && (item.type != 75 && item.type != 949))
+        //if ammo (exlcuding sand, star, and snowball ammo) then use normal
+        if (((item.ammo > 0 || item.bait > 0) && !item.notAmmo || item.type == ItemID.Wire) && (item.type != ItemID.FallenStar && item.type != ItemID.Snowball && item.type != ItemID.SandBlock && item.type != ItemID.EbonsandBlock && item.type != ItemID.CrimsandBlock && item.type != ItemID.PearlsandBlock))
         {
             return true;
         }
@@ -23,9 +25,8 @@ public class GlobalItemClass : GlobalItem
         {
             return true;
         }
-
-        //if heart or star vairant, use normal
-        if (item.type == 58 || item.type == 1867 || item.type == 1734 || item.type == 184 || item.type == 1868 || item.type == 1735 || (item.type > 3453 && item.type <= 3455))
+        //if heart or star variant, use normal
+        if (item.type == ItemID.Heart || item.type == ItemID.CandyCane || item.type == ItemID.CandyApple || item.type == ItemID.Star || item.type == ItemID.SugarPlum || item.type == ItemID.SoulCake || (item.type > ItemID.NebulaPickup1 && item.type <= ItemID.NebulaPickup3))
         {
             return true;
         }
@@ -36,7 +37,7 @@ public class GlobalItemClass : GlobalItem
             int i = index;
             if (i < 0)
                 i = 54 + index;
-            if (player.inventory[i].type > 0 && player.inventory[i].stack < player.inventory[i].maxStack && item.IsTheSameAs(player.inventory[i]))
+            if (player.inventory[i].type > ItemID.None && player.inventory[i].stack < player.inventory[i].maxStack && item.type == player.inventory[i].type) //item.IsTheSameAs(player.inventory[i])
             {
                 if (item.stack + player.inventory[i].stack <= player.inventory[i].maxStack)
                 {
@@ -50,15 +51,15 @@ public class GlobalItemClass : GlobalItem
         {
             for (int i = 1; i < 10; ++i)
             {
-                if (player.inventory[i].type == 0)
+                if (player.inventory[i].type == ItemID.None)
                 {
                     player.inventory[i] = item;
-                    ItemText.NewText(item, item.stack, false, false);
+                    PopupText.NewText(PopupTextContext.RegularItemPickup, item, item.stack, false, false);
                     player.DoCoins(i);
                     if (flag)
-                        Main.PlaySound(38, (int)player.position.X, (int)player.position.Y, 1, 1f, 0.0f);
+                        SoundEngine.PlaySound(SoundID.CoinPickup, player.position);
                     else
-                        Main.PlaySound(7, (int)player.position.X, (int)player.position.Y, 1, 1f, 0.0f);
+                        SoundEngine.PlaySound(SoundID.Grab, player.position);
                     if (player.whoAmI == Main.myPlayer)
                         Recipe.FindRecipes();
                     AchievementsHelper.NotifyItemPickup(player, item);
@@ -72,15 +73,15 @@ public class GlobalItemClass : GlobalItem
         {
             for (int i = num1 - 1; i >= 1; --i)
             {
-                if (player.inventory[i].type == 0)
+                if (player.inventory[i].type == ItemID.None)
                 {
                     player.inventory[i] = item;
-                    ItemText.NewText(item, item.stack, false, false);
+                    PopupText.NewText(PopupTextContext.RegularItemPickup, item, item.stack, false, false);
                     player.DoCoins(i);
                     if (flag)
-                        Main.PlaySound(38, (int)player.position.X, (int)player.position.Y, 1, 1f, 0.0f);
+                        SoundEngine.PlaySound(SoundID.CoinPickup, player.position);
                     else
-                        Main.PlaySound(7, (int)player.position.X, (int)player.position.Y, 1, 1f, 0.0f);
+                        SoundEngine.PlaySound(SoundID.Grab, player.position);
                     if (player.whoAmI == Main.myPlayer)
                         Recipe.FindRecipes();
                     AchievementsHelper.NotifyItemPickup(player, item);

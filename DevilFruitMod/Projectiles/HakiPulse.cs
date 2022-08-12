@@ -21,29 +21,29 @@ namespace DevilFruitMod.Projectiles
 
         public override void SetDefaults()
         {
-            projectile.extraUpdates = 0;
-            projectile.width = 416;
-            projectile.height = 416;
-            projectile.aiStyle = -1;
-            projectile.friendly = true;
-            projectile.penetrate = -1;
-            projectile.tileCollide = false;
-            projectile.alpha = 255;
-            projectile.scale = 1f;
-            projectile.timeLeft = 180;
+            Projectile.extraUpdates = 0;
+            Projectile.width = 416;
+            Projectile.height = 416;
+            Projectile.aiStyle = -1;
+            Projectile.friendly = true;
+            Projectile.penetrate = -1;
+            Projectile.tileCollide = false;
+            Projectile.alpha = 255;
+            Projectile.scale = 1f;
+            Projectile.timeLeft = 180;
         }
 
         public override void AI()
         {
             if (initial)
             {
-                if (!DevilFruitMod.npcShockwaveAvailable) projectile.Kill();
+                if (!DevilFruitMod.npcShockwaveAvailable) Projectile.Kill();
                 DevilFruitMod.npcShockwaveAvailable = false;
                 UpdateSilversIndex();
                 initial = false;
             }
             Vector2 offset = new Vector2(0, 11);
-            projectile.Center = Main.npc[silversIndex].Center - offset;
+            Projectile.Center = Main.npc[silversIndex].Center - offset;
             Vector2 spawn = Main.npc[silversIndex].Center - offset;
 
             if (!Filters.Scene["Shockwave1"].IsActive())
@@ -51,7 +51,7 @@ namespace DevilFruitMod.Projectiles
                 Filters.Scene.Activate("Shockwave1", spawn).GetShader().UseColor(rippleCount, rippleSize, rippleSpeed).UseTargetPosition(spawn);
             }
 
-            float progress = (180f - projectile.timeLeft) / 60f;
+            float progress = (180f - Projectile.timeLeft) / 60f;
             int size = (int)(24960 / 179 * progress) + 2;
             //projectile.width = size;
             //projectile.height = size;
@@ -60,7 +60,7 @@ namespace DevilFruitMod.Projectiles
 
             for (int i = 0; i < Main.maxNPCs; i++)
             {
-                if (Main.npc[i].active && !(Main.npc[i].aiStyle == 7||Main.npc[i].aiStyle == 24) && projectile.Hitbox.Intersects(Main.npc[i].Hitbox))
+                if (Main.npc[i].active && !(Main.npc[i].aiStyle == 7||Main.npc[i].aiStyle == 24) && Projectile.Hitbox.Intersects(Main.npc[i].Hitbox))
                 {
                     //make thing happen on collision
                     Main.npc[i].AddBuff(ModContent.BuffType<Buffs.hakiStun>(), 60); 
@@ -77,7 +77,7 @@ namespace DevilFruitMod.Projectiles
         //Find silvers and updates silversIndex
         private void UpdateSilversIndex()
         {
-            int silversType = mod.NPCType("Dark King");
+            int silversType = Mod.Find<ModNPC>("Dark King").Type;
             if (silversIndex >= 0 && Main.npc[silversIndex].active && Main.npc[silversIndex].type == silversType)
             {
                 return;

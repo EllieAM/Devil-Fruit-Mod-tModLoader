@@ -2,6 +2,7 @@ using DevilFruitMod.Util;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -10,12 +11,13 @@ namespace DevilFruitMod.GumGumFruit
 {
     public class GumHuman : DevilFruitUser
     {
+        SoundStyle GumShootSoundStyle = new SoundStyle("Sounds/GumGumShoot");
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
 
             //if: player has eaten Gum Gum Fruit and...
             //if: Empty hand, eaten fruit, not in water, and (using mouse -> can use mouse)
-            if (player.GetModPlayer<DevilFruitUser>().eatenDevilFruit == 1 && player.HeldItem.type == ItemID.None && !(player.wet && !(player.honeyWet || player.lavaWet)) && (!Equals(DevilFruitMod.UsePowers1Hotkey.GetAssignedKeys(InputMode.Keyboard)[0], "Mouse1") || (Main.hasFocus && !Main.LocalPlayer.mouseInterface && !Main.drawingPlayerChat && !Main.editSign && !Main.editChest && !Main.blockInput && !Main.mapFullscreen && !Main.HoveringOverAnNPC && Main.LocalPlayer.talkNPC == -1)))
+            if (Player.GetModPlayer<DevilFruitUser>().eatenDevilFruit == 1 && Player.HeldItem.type == ItemID.None && !(Player.wet && !(Player.honeyWet || Player.lavaWet)) && (!Equals(DevilFruitMod.UsePowers1Hotkey.GetAssignedKeys(InputMode.Keyboard)[0], "Mouse1") || (Main.hasFocus && !Main.LocalPlayer.mouseInterface && !Main.drawingPlayerChat && !Main.editSign && !Main.editChest && !Main.blockInput && !Main.mapFullscreen && !Main.HoveringOverAnNPC && Main.LocalPlayer.talkNPC == -1)))
             {
                 //Getting the shooting trajectory
                 Vector2 dir = TMath.CalculateTrajectory();
@@ -63,7 +65,7 @@ namespace DevilFruitMod.GumGumFruit
             {
                 if (timer == 0)
                 {
-                    if (player.HeldItem.type == 0 && !(player.wet && !(player.honeyWet || player.lavaWet)) && (!Equals(DevilFruitMod.UsePowers1Hotkey.GetAssignedKeys(InputMode.Keyboard)[0], "Mouse1") || (Main.hasFocus && !Main.LocalPlayer.mouseInterface && !Main.drawingPlayerChat && !Main.editSign && !Main.editChest && !Main.blockInput && !Main.mapFullscreen && !Main.HoveringOverAnNPC && Main.LocalPlayer.talkNPC == -1)))
+                    if (Player.HeldItem.type == ItemID.None && !(Player.wet && !(Player.honeyWet || Player.lavaWet)) && (!Equals(DevilFruitMod.UsePowers1Hotkey.GetAssignedKeys(InputMode.Keyboard)[0], "Mouse1") || (Main.hasFocus && !Main.LocalPlayer.mouseInterface && !Main.drawingPlayerChat && !Main.editSign && !Main.editChest && !Main.blockInput && !Main.mapFullscreen && !Main.HoveringOverAnNPC && Main.LocalPlayer.talkNPC == -1)))
                     {
                         //Getting the shooting trajectory
                         Vector2 dir = TMath.CalculateTrajectory();
@@ -79,26 +81,26 @@ namespace DevilFruitMod.GumGumFruit
                 }
             }
 
-            if (player.GetModPlayer<DevilFruitUser>().eatenDevilFruit > 0 && player.wet && !(player.honeyWet || player.lavaWet))
+            if (Player.GetModPlayer<DevilFruitUser>().eatenDevilFruit > 0 && Player.wet && !(Player.honeyWet || Player.lavaWet))
              {
-                player.AddBuff(ModContent.BuffType<Buffs.waterStun>(), 60, true);
+                Player.AddBuff(ModContent.BuffType<Buffs.waterStun>(), 60, true);
              }
             //No fall damage if eaten Gum Gum Fruit
-            if (player.GetModPlayer<DevilFruitUser>().eatenDevilFruit == 1)
+            if (Player.GetModPlayer<DevilFruitUser>().eatenDevilFruit == 1)
             {
-                player.noFallDmg = true;
+                Player.noFallDmg = true;
 
                 //"Boing" if fallen instead of damage
-                if (!falling && ((player.gravDir == 1 && player.velocity.Y > 10) || (player.gravDir == -1 && player.velocity.Y < 10)))
+                if (!falling && ((Player.gravDir == 1 && Player.velocity.Y > 10) || (Player.gravDir == -1 && Player.velocity.Y < 10)))
                 {
                     falling = true;
                 }
-                if (falling && ((player.gravDir == 1 && player.velocity.Y <= 0) || (player.gravDir == -1 && player.velocity.Y >= 0)))
+                if (falling && ((Player.gravDir == 1 && Player.velocity.Y <= 0) || (Player.gravDir == -1 && Player.velocity.Y >= 0)))
                 {
                     falling = false;
-                    if ((player.gravDir == 1 && ((int)((player.position.Y) / 16) - player.fallStart) > (25 + player.extraFall)) || (player.gravDir == -1 && player.fallStart < -(25 + player.extraFall)))
+                    if ((Player.gravDir == 1 && ((int)((Player.position.Y) / 16) - Player.fallStart) > (25 + Player.extraFall)) || (Player.gravDir == -1 && Player.fallStart < -(25 + Player.extraFall)))
                     {
-                        CombatText.NewText(player.getRect(), Color.White, "Boing");
+                        CombatText.NewText(Player.getRect(), Color.White, "Boing");
                     }
                 }
             }
@@ -108,11 +110,11 @@ namespace DevilFruitMod.GumGumFruit
         //Spawns attack projectile depending on numAbility
         public void GumGumPowers(float directionX, float directionY, int numAbility)
         {
-            if (numAbility <= player.GetModPlayer<DevilFruitUser>().fruitLevel)
+            if (numAbility <= Player.GetModPlayer<DevilFruitUser>().fruitLevel)
             {
                 //scaling damage to progress, change to increase damage,
                 //knockback and number of hands for any given level
-                switch (player.GetModPlayer<DevilFruitUser>().fruitLevel)
+                switch (Player.GetModPlayer<DevilFruitUser>().fruitLevel)
                 {
                     //start of game
                     case 0:
@@ -139,21 +141,21 @@ namespace DevilFruitMod.GumGumFruit
                         knockback = 12;
                         break;
                 }
-                if (Main.netMode != NetmodeID.Server && Main.myPlayer == player.whoAmI)
+                if (Main.netMode != NetmodeID.Server && Main.myPlayer == Player.whoAmI)
                 {
                     //still has hands available
                     if (DevilFruitMod.hands < maxHands && numAbility != 2)
                     {
                         if (numAbility == 0)
-                            Projectile.NewProjectile(player.Center.X - 8, player.Center.Y, directionX, directionY, mod.ProjectileType("GumGumPistol"), damage, knockback, Main.myPlayer, 0f, 0f); //Spawning a projectile
+                            Projectile.NewProjectile(null, Player.Center.X - 8, Player.Center.Y, directionX, directionY, Mod.Find<ModProjectile>("GumGumPistol").Type, damage, knockback, Main.myPlayer, 0f, 0f); //Spawning a projectile
                         if (numAbility == 1)
-                            Projectile.NewProjectile(player.Center.X, player.Center.Y, -directionX / 3, -directionY / 3, mod.ProjectileType("GumGumRifle"), 2 * damage, 2 * knockback, Main.myPlayer, 0f, 0f);
+                            Projectile.NewProjectile(null, Player.Center.X, Player.Center.Y, -directionX / 3, -directionY / 3, Mod.Find<ModProjectile>("GumGumRifle").Type, 2 * damage, 2 * knockback, Main.myPlayer, 0f, 0f);
 
                         DevilFruitMod.hands++;
                     }
                     if (numAbility == 2)
                     {
-                        Projectile.NewProjectile(player.Center.X, player.Center.Y, directionX, directionY, mod.ProjectileType("GumGumGatling"), damage, knockback, Main.myPlayer, 0f, 0f);
+                        Projectile.NewProjectile(null, Player.Center.X, Player.Center.Y, directionX, directionY, Mod.Find<ModProjectile>("GumGumGatling").Type, damage, knockback, Main.myPlayer, 0f, 0f);
                     }
                 }
             }
@@ -166,8 +168,8 @@ namespace DevilFruitMod.GumGumFruit
             maxHands = 2;
             if (DevilFruitMod.hands < maxHands)
             {
-                Projectile.NewProjectile(player.Center.X, player.Center.Y, 1.4f * directionX, 1.4f * directionY, mod.ProjectileType("GumGumHook"), 0, 0, Main.myPlayer, 0f, 0f); //Spawning a projectile
-                Main.PlaySound(SoundLoader.customSoundType, (int)player.position.X, (int)player.position.Y, mod.GetSoundSlot(SoundType.Custom, "Sounds/GumGumShoot"));
+                Projectile.NewProjectile(null, Player.Center.X, Player.Center.Y, 1.4f * directionX, 1.4f * directionY, Mod.Find<ModProjectile>("GumGumHook").Type, 0, 0, Main.myPlayer, 0f, 0f); //Spawning a projectile
+                SoundEngine.PlaySound(GumShootSoundStyle, Player.position);
                 DevilFruitMod.hands++;
             }
         }
